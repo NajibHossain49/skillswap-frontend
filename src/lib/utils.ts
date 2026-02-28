@@ -33,10 +33,10 @@ export const statusColors: Record<SessionStatus, { bg: string; text: string; dot
   CANCELLED: { bg: 'bg-rose-500/10', text: 'text-rose-400', dot: 'bg-rose-400' },
 };
 
-export const roleColors: Record<Role, { bg: string; text: string }> = {
-  ADMIN: { bg: 'bg-rose-500/10', text: 'text-rose-400' },
-  MENTOR: { bg: 'bg-accent-500/10', text: 'text-accent-400' },
-  LEARNER: { bg: 'bg-sage-500/10', text: 'text-sage-400' },
+export const roleColors: Record<Role, { bg: string; text: string; dot: string }> = {
+  ADMIN: { bg: 'bg-rose-500/10', text: 'text-rose-400', dot: 'bg-rose-400' },
+  MENTOR: { bg: 'bg-accent-500/10', text: 'text-accent-400', dot: 'bg-accent-400' },
+  LEARNER: { bg: 'bg-sage-500/10', text: 'text-sage-400', dot: 'bg-sage-400' },
 };
 
 export function getInitials(name: string): string {

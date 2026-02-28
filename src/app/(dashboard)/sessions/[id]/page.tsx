@@ -193,7 +193,7 @@ export default function SessionDetailPage() {
                     <span className="text-sm font-bold text-ink-200 ml-1">{session.feedback.rating}/5</span>
                   </div>
                   {session.feedback.comment && (
-                    <p className="text-ink-400 text-sm leading-relaxed mt-2">"{session.feedback.comment}"</p>
+                    <p className="text-ink-400 text-sm leading-relaxed mt-2">&quot;{session.feedback.comment}&quot;</p>
                   )}
                 </div>
               </Card>

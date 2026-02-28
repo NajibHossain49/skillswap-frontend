@@ -184,7 +184,7 @@ export default function SkillDetailPage() {
 
       {/* Delete confirm */}
       <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete Skill" size="sm">
-        <p className="text-ink-400 mb-6">Are you sure you want to delete <strong className="text-ink-200">"{skill.title}"</strong>? This action cannot be undone.</p>
+        <p className="text-ink-400 mb-6">Are you sure you want to delete <strong className="text-ink-200">&quot;{skill.title}&quot;</strong>? This action cannot be undone.</p>
         <div className="flex gap-3">
           <Button variant="secondary" onClick={() => setDeleteOpen(false)} className="flex-1">Cancel</Button>
           <Button variant="danger" onClick={onDelete} loading={deleteSkill.isPending} className="flex-1">Delete</Button>
