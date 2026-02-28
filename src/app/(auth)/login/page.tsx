@@ -53,9 +53,9 @@ export default function LoginPage() {
       <div className="mb-6 p-4 bg-accent-500/8 border border-accent-500/20 rounded-xl">
         <p className="text-xs font-semibold text-accent-400 mb-2 uppercase tracking-wide">Demo accounts</p>
         <div className="space-y-1 text-xs text-ink-400">
-          <p>🛡 <span className="text-ink-300">Admin:</span> admin@skillswap.com / Admin@123</p>
-          <p>🎓 <span className="text-ink-300">Mentor:</span> mentor@skillswap.com / Mentor@123</p>
-          <p>📚 <span className="text-ink-300">Learner:</span> learner@skillswap.com / Learner@123</p>
+          <p>🛡 <span className="text-ink-300">Admin:</span> admin@skillswap.com / Adm!n-SkillSwap-2026</p>
+          <p>🎓 <span className="text-ink-300">Mentor:</span> michael.kovacs@skillswap.com / Mentor2026!!</p>
+          <p>📚 <span className="text-ink-300">Learner:</span> alex.k@skillswap.com / Learner2026!!</p>
         </div>
       </div>
 
