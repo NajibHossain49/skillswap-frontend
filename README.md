@@ -4,6 +4,13 @@ A production-ready Next.js 15 frontend for the SkillSwap peer-to-peer skill exch
 
 ---
 
+🔗 **Backend Repository:**
+SkillSwap API (Node.js + Express + PostgreSQL + Prisma ORM)
+👉 [https://github.com/NajibHossain49/skillswap-backend.git](https://github.com/NajibHossain49/skillswap-backend.git)
+
+⚠️ The backend must be running on `http://localhost:3000` for the frontend to function correctly.
+
+
 ## Tech Stack
 
 | Technology | Version | Purpose |
