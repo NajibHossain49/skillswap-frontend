@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, Edit2, Trash2, Users, BookOpen } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Skeleton, Modal, Textarea, Select, Avatar } from '@/components/ui';
 import { useSkill, useUpdateSkill, useDeleteSkill } from '@/hooks/useSkills';
@@ -72,7 +72,7 @@ export default function SkillDetailPage() {
       <div className="p-8 max-w-5xl mx-auto">
         {/* Back */}
         <Link href="/skills">
-          <Button variant="ghost" size="sm" icon={<ArrowLeft size={15} />} className="mb-6">
+          <Button variant="ghost" size="sm" className="mb-6">
             Back to Skills
           </Button>
         </Link>
@@ -91,8 +91,8 @@ export default function SkillDetailPage() {
                 </div>
                 {canEdit && (
                   <div className="flex gap-2">
-                    <Button variant="secondary" size="sm" icon={<Edit2 size={14} />} onClick={() => setEditOpen(true)}>Edit</Button>
-                    <Button variant="danger" size="sm" icon={<Trash2 size={14} />} onClick={() => setDeleteOpen(true)}>Delete</Button>
+                    <Button variant="secondary" size="sm"  onClick={() => setEditOpen(true)}>Edit</Button>
+                    <Button variant="secondary" size="sm" onClick={() => setDeleteOpen(true)}>Delete</Button>
                   </div>
                 )}
               </div>
@@ -162,7 +162,7 @@ export default function SkillDetailPage() {
 
             {user?.role === 'LEARNER' && (
               <Link href={`/sessions?skillId=${id}`}>
-                <Button className="w-full" icon={<Calendar size={16} />}>Book a Session</Button>
+                <Button className="w-full" >Book a Session</Button>
               </Link>
             )}
           </div>
@@ -187,7 +187,7 @@ export default function SkillDetailPage() {
         <p className="text-ink-400 mb-6">Are you sure you want to delete <strong className="text-ink-200">&quot;{skill.title}&quot;</strong>? This action cannot be undone.</p>
         <div className="flex gap-3">
           <Button variant="secondary" onClick={() => setDeleteOpen(false)} className="flex-1">Cancel</Button>
-          <Button variant="danger" onClick={onDelete} loading={deleteSkill.isPending} className="flex-1">Delete</Button>
+          <Button variant="secondary" onClick={onDelete} loading={deleteSkill.isPending} className="flex-1">Delete</Button>
         </div>
       </Modal>
     </div>

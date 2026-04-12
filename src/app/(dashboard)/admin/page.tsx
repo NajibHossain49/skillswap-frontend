@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Users, Shield, UserCheck, UserX, Trash2, RefreshCw } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Avatar, StatCard, SkeletonCard, Modal, Select, EmptyState } from '@/components/ui';
 import { Input } from '@/components/ui/Input';
@@ -160,7 +160,7 @@ function UsersTable() {
           />
           <div className="flex gap-3">
             <Button variant="secondary" onClick={() => setRoleModalUser(null)} className="flex-1">Cancel</Button>
-            <Button onClick={() => roleModalUser && updateRole.mutate({ id: roleModalUser.id, role: newRole })} loading={updateRole.isPending} className="flex-1">Update</Button>
+            <Button onClick={() => roleModalUser && updateRole.mutate({ id: roleModalUser.id, role: newRole })} className="flex-1">Update</Button>
           </div>
         </div>
       </Modal>

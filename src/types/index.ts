@@ -1,7 +1,10 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+
 export type Role = 'ADMIN' | 'MENTOR' | 'LEARNER';
 export type SessionStatus = 'PENDING' | 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
 
 export interface User {
+  avatar?: string;
   id: string;
   email: string;
   name: string;

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, Search, BookOpen, Users, Calendar } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, Badge, SkeletonCard, EmptyState, Modal, Textarea, Select } from '@/components/ui';
@@ -141,7 +141,7 @@ export default function SkillsPage() {
             ))}
           </div>
           {canCreate && (
-            <Button onClick={() => setCreateOpen(true)} icon={<Plus size={16} />}>
+            <Button onClick={() => setCreateOpen(true)}>
               Add Skill
             </Button>
           )}
@@ -157,7 +157,7 @@ export default function SkillsPage() {
             icon={<BookOpen size={28} />}
             title="No skills found"
             description={search ? `No results for "${search}"` : 'Be the first to add a skill!'}
-            action={canCreate ? <Button onClick={() => setCreateOpen(true)} icon={<Plus size={16} />}>Add Skill</Button> : undefined}
+            action={canCreate ? <Button onClick={() => setCreateOpen(true)}>Add Skill</Button> : undefined}
           />
         ) : (
           <>

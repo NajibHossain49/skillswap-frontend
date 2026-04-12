@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Avatar, Skeleton, Modal } from '@/components/ui';
 import { useSession, useBookSession, useUpdateSessionStatus, useAddFeedback } from '@/hooks/useSessions';
@@ -97,7 +97,7 @@ export default function SessionDetailPage() {
       <Header title="Session Detail" />
       <div className="p-8 max-w-4xl mx-auto">
         <Link href="/sessions">
-          <Button variant="ghost" size="sm" icon={<ArrowLeft size={15} />} className="mb-6">
+          <Button variant="ghost" size="sm" className="mb-6">
             Back to Sessions
           </Button>
         </Link>
@@ -208,7 +208,7 @@ export default function SessionDetailPage() {
                 {canBook && (
                   <Button
                     className="w-full"
-                    icon={<CheckCircle size={16} />}
+            
                     onClick={() => bookSession.mutate(id)}
                     loading={bookSession.isPending}
                   >
@@ -219,7 +219,7 @@ export default function SessionDetailPage() {
                   <Button
                     variant="outline"
                     className="w-full"
-                    icon={<CheckCircle size={16} />}
+                    // icon={<CheckCircle size={16} />}
                     onClick={() => updateStatus.mutate({ id, status: 'COMPLETED' })}
                     loading={updateStatus.isPending}
                   >
@@ -230,13 +230,13 @@ export default function SessionDetailPage() {
                   <Button
                     variant="secondary"
                     className="w-full"
-                    icon={<Star size={16} />}
+                    // icon={<Star size={16} />}
                     onClick={() => setFeedbackOpen(true)}
                   >
                     Leave Feedback
                   </Button>
                 )}
-                {canCancel && (
+                {/* {canCancel && (
                   <Button
                     variant="danger"
                     className="w-full"
@@ -245,7 +245,7 @@ export default function SessionDetailPage() {
                   >
                     Cancel Session
                   </Button>
-                )}
+                )} */}
                 {!canBook && !canComplete && !canFeedback && !canCancel && (
                   <p className="text-ink-600 text-sm text-center py-2">No actions available</p>
                 )}
@@ -275,7 +275,7 @@ export default function SessionDetailPage() {
         <p className="text-ink-400 mb-6">Are you sure you want to cancel this session? The learner will be notified.</p>
         <div className="flex gap-3">
           <Button variant="secondary" onClick={() => setCancelOpen(false)} className="flex-1">Keep it</Button>
-          <Button variant="danger" onClick={() => { updateStatus.mutate({ id, status: 'CANCELLED' }); setCancelOpen(false); }} loading={updateStatus.isPending} className="flex-1">Cancel Session</Button>
+          <Button variant="secondary" onClick={() => { updateStatus.mutate({ id, status: 'CANCELLED' }); setCancelOpen(false); }} loading={updateStatus.isPending} className="flex-1">Cancel Session</Button>
         </div>
       </Modal>
     </div>

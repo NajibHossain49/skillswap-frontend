@@ -82,7 +82,7 @@ export default function LoginPage() {
           {...register('password')}
         />
 
-        <Button type="submit" loading={loading} size="lg" className="w-full mt-2">
+        <Button type="submit"  size="lg" className="w-full mt-2">
           Sign in
         </Button>
       </form>

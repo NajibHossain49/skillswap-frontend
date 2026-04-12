@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Users, BookOpen, Calendar, Star, TrendingUp, Clock } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
 import { StatCard, Card, SkeletonCard, Badge, Avatar } from '@/components/ui';
 import { adminApi, sessionsApi } from '@/lib/api-services';
 import { useAuthStore } from '@/store/auth';
@@ -11,6 +10,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Session, SessionStatus } from '@/types';
+import { Header } from '@/app/(dashboard)/layout/Header';
 
 const STATUS_COLORS: Record<SessionStatus, string> = {
   PENDING: '#F59E0B',

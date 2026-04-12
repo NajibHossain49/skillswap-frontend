@@ -1,5 +1,7 @@
+"use client"
 import Link from 'next/link';
 import { Zap, Github, Twitter, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 const footerLinks = {
     Platform: [
@@ -23,6 +25,17 @@ const footerLinks = {
 };
 
 export function Footer() {
+    const pathname = usePathname();
+    if (
+        pathname === "/login" ||
+        pathname === "/register" ||
+        pathname === "/skills" ||
+        pathname === "/sessions" ||
+        pathname === "/admin" ||
+        pathname.startsWith("/dashboard")
+    ) {
+        return null;
+    }
     return (
         <footer className="bg-ink-950 border-t border-ink-800/60">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">

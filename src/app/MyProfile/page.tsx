@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 // ─── Skeleton primitives ───────────────────────────────────────────────────────
 
@@ -51,7 +52,7 @@ function ProfileSkeleton() {
                     {/* Meta chips */}
                     <div className="flex flex-wrap gap-3">
                         {[80, 100, 120, 90].map((w, i) => (
-                            <Skeleton key={i} className={`h-6 rounded-full`} style={{ width: w }} />
+                            <Skeleton key={i} className={`h-6 rounded-full`} />
                         ))}
                     </div>
                 </div>
@@ -170,7 +171,11 @@ export default function ProfilePage() {
                 id: '1',
                 name: authUser?.name ?? 'Alex Morgan',
                 email: authUser?.email ?? 'alex@skillswap.dev',
-                avatar: authUser?.avatar,
+                avatar: authUser?.avatar
+                    ? typeof authUser.avatar === 'string'
+                        ? authUser.avatar
+                        : undefined
+                    : undefined,
                 bio: 'Full-stack engineer passionate about open source and teaching. I love breaking down complex concepts into simple, actionable steps. Currently exploring AI/ML and WebAssembly.',
                 role: (authUser?.role as 'MENTOR' | 'LEARNER') ?? 'MENTOR',
                 location: 'Dhaka, Bangladesh',
@@ -241,7 +246,7 @@ export default function ProfilePage() {
                     <div className="relative w-28 h-28">
                         <div className="w-28 h-28 rounded-2xl ring-4 ring-ink-950 overflow-hidden bg-accent-500 flex items-center justify-center text-white text-3xl font-black shadow-xl">
                             {profile.avatar
-                                ? <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
+                                ? <Image width={100} height={100} src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
                                 : <span>{getInitials(profile.name)}</span>}
                         </div>
                         {profile.isVerified && (

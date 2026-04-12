@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, Calendar, Clock, Filter } from 'lucide-react';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, SkeletonCard, EmptyState, Modal, Textarea, Select } from '@/components/ui';
 import { useSessions, useCreateSession } from '@/hooks/useSessions';
@@ -154,7 +154,7 @@ export default function SessionsPage() {
             ))}
           </div>
           {canCreate && (
-            <Button onClick={() => setCreateOpen(true)} icon={<Plus size={16} />}>
+            <Button onClick={() => setCreateOpen(true)} >
               New Session
             </Button>
           )}
@@ -169,7 +169,7 @@ export default function SessionsPage() {
             icon={<Calendar size={28} />}
             title="No sessions found"
             description={status ? `No ${status.toLowerCase()} sessions` : 'No sessions available yet'}
-            action={canCreate ? <Button onClick={() => setCreateOpen(true)} icon={<Plus size={16} />}>Create Session</Button> : undefined}
+            action={canCreate ? <Button onClick={() => setCreateOpen(true)} >Create Session</Button> : undefined}
           />
         ) : (
           <>

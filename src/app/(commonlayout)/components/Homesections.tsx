@@ -288,7 +288,7 @@ export function TestimonialsSection() {
                                     <Star key={i} size={13} className="text-yellow-400 fill-yellow-400" />
                                 ))}
                             </div>
-                            <p className="text-sm text-ink-400 leading-relaxed flex-1 mb-5">"{t.text}"</p>
+                            <p className="text-sm text-ink-400 leading-relaxed flex-1 mb-5">&quot;{t.text}&quot;</p>
                             <div className="flex items-center gap-3">
                                 <div className="w-9 h-9 rounded-full bg-accent-500/20 flex items-center justify-center text-xs font-bold text-accent-400">
                                     {t.avatar}

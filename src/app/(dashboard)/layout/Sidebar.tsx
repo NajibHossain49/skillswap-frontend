@@ -11,14 +11,14 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { Avatar, Badge } from '@/components/ui';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '../../components/ui/Button';
+import { Button } from '../../../components/ui/Button';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/skills', label: 'Skills', icon: BookOpen, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/sessions', label: 'Sessions', icon: Calendar, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/admin', label: 'Admin Panel', icon: Shield, roles: ['ADMIN'] },
-  { href: '/profile', label: 'Profile', icon: Settings, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  // { href: '/profile', label: 'Profile', icon: Settings, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
 ];
 
 function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
