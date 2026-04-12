@@ -161,7 +161,7 @@ function LearnerDashboard() {
               </div>
             </Link>
             <Link href="/sessions">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-sage-500/8 border border-sage-500/20 hover:bg-sage-500/15 transition-colors cursor-pointer">
+              <div className="flex items-center gap-3 p-3 mt-3 rounded-xl bg-sage-500/8 border border-sage-500/20 hover:bg-sage-500/15 transition-colors cursor-pointer">
                 <Calendar size={18} className="text-sage-400" />
                 <div>
                   <p className="text-sm font-medium text-ink-200">Find Sessions</p>

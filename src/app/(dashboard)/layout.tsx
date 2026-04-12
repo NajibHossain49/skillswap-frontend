@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { Sidebar, MobileTopBar } from '@/components/layout/Sidebar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -20,9 +20,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen bg-ink-900">
       <Sidebar />
-      <main className="flex-1 min-w-0 overflow-auto">
-        {children}
-      </main>
+
+      {/* Mobile + content column */}
+      <div className="flex-1 min-w-0 flex flex-col overflow-auto">
+        {/* Mobile: sticky topbar with hamburger */}
+        <MobileTopBar />
+
+        <main className="flex-1">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

@@ -1,16 +1,13 @@
-
-import { Footer } from '@/components/layout/Footer';
-import { Navbar } from '@/components/Navbar';
-import { FAQSection, FeaturedSkillsSection, FeaturesSection, HeroSection, HowItWorksSection, NewsletterSection, StatsSection, TestimonialsSection } from './(dashboard)/Home/components/Homesections';
+import { FAQSection, FeaturedSkillsSection, FeaturesSection, HeroSection, HowItWorksSection, NewsletterSection, StatsSection, TestimonialsSection } from "./components/Homesections";
 
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-ink-900">
-      <Navbar />
+     
 
-      <HeroSection />       
-      <HowItWorksSection /> 
+      <HeroSection />         {/* 1. Hero + stats */}
+      <HowItWorksSection />   {/* 2. 4-step process */}
       <FeaturedSkillsSection />{/* 3. Skill cards grid */}
       <FeaturesSection />     {/* 4. Why SkillSwap */}
       <StatsSection />        {/* 5. Big numbers */}
@@ -18,7 +15,6 @@ export default function HomePage() {
       <FAQSection />          {/* 7. Accordion FAQ */}
       <NewsletterSection />   {/* 8. CTA + email */}
 
-      <Footer />
     </div>
   );
 }

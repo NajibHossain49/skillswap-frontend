@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Footer } from "@/components/layout/Footer";
+import HomePage from "./(dashboard)/Home/page";
+import { Navbar } from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +27,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-body antialiased">
         <Providers>
+          <Navbar />
           {children}
+
+
           <Toaster
             position="bottom-right"
             toastOptions={{
