@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth';
-import { Sidebar } from '@/app/(dashboard)/layout/Sidebar';
+import { Sidebar, MobileTopBar } from '@/app/(dashboard)/layout/Sidebar';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -19,10 +19,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen bg-ink-900">
+      {/* Desktop: fixed left sidebar */}
       <Sidebar />
-      <main className="flex-1 min-w-0 overflow-auto">
-        {children}
-      </main>
+
+
+      <div className="flex-1 min-w-0 flex flex-col overflow-auto">
+   
+        <MobileTopBar />
+
+        <main className="flex-1">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

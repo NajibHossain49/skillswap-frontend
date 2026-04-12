@@ -11,14 +11,15 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { Avatar, Badge } from '@/components/ui';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '../../../components/ui/Button';
+import { Button } from '@/components/ui/Button';
+
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
-  { href: '/skills', label: 'Skills', icon: BookOpen, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
-  { href: '/sessions', label: 'Sessions', icon: Calendar, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
-  { href: '/admin', label: 'Admin Panel', icon: Shield, roles: ['ADMIN'] },
-  // { href: '/profile', label: 'Profile', icon: Settings, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/skills',    label: 'Skills',     icon: BookOpen,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/sessions',  label: 'Sessions',   icon: Calendar,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/admin',     label: 'Admin Panel',icon: Shield,          roles: ['ADMIN'] },
+  { href: '/profile',   label: 'Profile',    icon: Settings,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
 ];
 
 function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
@@ -32,7 +33,7 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
   return (
     <div className="flex flex-col h-full">
       <div className="p-6 border-b border-ink-800/60">
-        <Link href="/" onClick={onNavClick} className="flex items-center gap-2.5 group">
+        <Link href="/dashboard" onClick={onNavClick} className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 bg-accent-500 rounded-xl flex items-center justify-center shadow-glow-sm group-hover:shadow-glow transition-all">
             <Zap size={18} className="text-white" />
           </div>
@@ -98,7 +99,7 @@ export function MobileTopBar() {
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          {/* ✅ Menu খোলা থাকলে X, বন্ধ থাকলে Hamburger */}
+         
           <Button
             variant="ghost"
             size="icon"
