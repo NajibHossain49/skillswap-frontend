@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/app/(commonlayout)/Navbar";
 import { Footer } from "@/app/(commonlayout)/Footer";
+import { ChatBot } from "@/components/chatbot/ChatBot";
 
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer></Footer>
+          <ChatBot />
           <Toaster
             position="bottom-right"
             toastOptions={{
