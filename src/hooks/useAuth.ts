@@ -23,7 +23,6 @@ export function useAuth() {
     email: string;
     password: string;
     bio?: string;
-    role?: 'MENTOR' | 'LEARNER';
   }) => {
     const res = await authApi.register(data);
     const { user, accessToken, refreshToken } = res.data.data;

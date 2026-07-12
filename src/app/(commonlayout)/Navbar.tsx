@@ -153,9 +153,9 @@ export function Navbar() {
                                 >
                                     {/* Avatar */}
                                     <div className="w-8 h-8 rounded-full bg-accent-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-accent-500/30 group-hover:ring-accent-400/60 transition-all overflow-hidden">
-                                        {user.avatar ? (
+                                        {user.avatarUrl ? (
                                             <Image
-                                                src={user.avatar}
+                                                src={user.avatarUrl}
                                                 alt={user.name}
                                                 width={32}
                                                 height={32}
@@ -195,7 +195,7 @@ export function Navbar() {
                                         </Link>
 
                                         <Link
-                                            href="/MyProfile"
+                                            href="/profile"
                                             onClick={() => setProfileOpen(false)}
                                             className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-ink-400 hover:text-ink-100 hover:bg-ink-800/60 transition-all"
                                         >
@@ -278,9 +278,9 @@ export function Navbar() {
                             <div className="pt-3 border-t border-ink-800/60 mt-2 flex flex-col gap-1">
                                 <div className="flex items-center gap-3 px-3 py-2 mb-1">
                                     <div className="w-9 h-9 rounded-full bg-accent-500 flex items-center justify-center text-white text-xs font-bold overflow-hidden flex-shrink-0">
-                                        {user.avatar ? (
+                                        {user.avatarUrl ? (
                                             <Image
-                                                src={user.avatar}
+                                                src={user.avatarUrl}
                                                 alt={user.name}
                                                 width={36}
                                                 height={36}
@@ -297,7 +297,7 @@ export function Navbar() {
                                 </div>
 
                                 <Link
-                                    href="/MyProfile"
+                                    href="/profile"
                                     onClick={() => setMobileOpen(false)}
                                     className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-ink-400 hover:text-ink-100 hover:bg-ink-800/60 rounded-lg transition-all"
                                 >

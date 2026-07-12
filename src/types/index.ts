@@ -1,10 +1,46 @@
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-
 export type Role = 'ADMIN' | 'MENTOR' | 'LEARNER';
 export type SessionStatus = 'PENDING' | 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
 
+export type MentorStatus = 'NONE' | 'PENDING' | 'APPROVED' | 'REJECTED';
+export type SkillLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+
+export type NotificationType =
+  | 'SESSION_BOOKED'
+  | 'SESSION_CANCELLED'
+  | 'SESSION_REMINDER'
+  | 'SESSION_COMPLETED'
+  | 'FEEDBACK_RECEIVED'
+  | 'BOOKING_REQUEST'
+  | 'BOOKING_ACCEPTED'
+  | 'BOOKING_REJECTED'
+  | 'MENTOR_APPROVED'
+  | 'SYSTEM';
+
+export type BookingRequestStatus =
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CANCELLED'
+  | 'EXPIRED';
+
+export type CreditTxnType =
+  | 'SIGNUP_BONUS'
+  | 'EARNED'
+  | 'SPENT'
+  | 'REFUND'
+  | 'ADMIN_ADJUSTMENT';
+
+export type ReportReason =
+  | 'SPAM'
+  | 'HARASSMENT'
+  | 'INAPPROPRIATE_CONTENT'
+  | 'NO_SHOW'
+  | 'FRAUD'
+  | 'OTHER';
+
+export type ReportStatus = 'OPEN' | 'UNDER_REVIEW' | 'RESOLVED' | 'DISMISSED';
+
 export interface User {
-  avatar?: string;
   id: string;
   email: string;
   name: string;
@@ -13,6 +49,15 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  creditBalance: number;
+  ratingAvg: number;
+  ratingCount: number;
+  totalSessionsTaught: number;
+  avatarUrl?: string | null;
+  isEmailVerified: boolean;
+  mentorStatus: MentorStatus;
+  headline?: string | null;
+  location?: string | null;
 }
 
 export interface AuthTokens {
@@ -31,6 +76,9 @@ export interface Skill {
   title: string;
   description: string;
   category: string;
+  level: SkillLevel;
+  tags: string[];
+  creditCost: number;
   createdById: string;
   isActive: boolean;
   createdAt: string;
@@ -61,12 +109,114 @@ export interface Session {
   scheduledAt: string;
   duration: number;
   status: SessionStatus;
+  meetingLink?: string | null;
+  cancelReason?: string | null;
   createdAt: string;
   updatedAt: string;
   mentor: { id: string; name: string; email: string };
   learner?: { id: string; name: string; email: string } | null;
   skill: { id: string; title: string; category: string };
   feedback?: Feedback | null;
+}
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  isRead: boolean;
+  data?: Record<string, unknown> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookingRequest {
+  id: string;
+  mentorId: string;
+  learnerId: string;
+  skillId: string;
+  proposedAt: string;
+  duration: number;
+  message?: string | null;
+  status: BookingRequestStatus;
+  reason?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  mentor?: { id: string; name: string; avatarUrl?: string | null };
+  learner?: { id: string; name: string; avatarUrl?: string | null };
+  skill?: { id: string; title: string; category: string; creditCost: number };
+}
+
+export interface Availability {
+  id: string;
+  mentorId: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreditTransaction {
+  id: string;
+  userId: string;
+  type: CreditTxnType;
+  amount: number;
+  balanceAfter: number;
+  description?: string | null;
+  sessionId?: string | null;
+  createdAt: string;
+}
+
+export interface Report {
+  id: string;
+  reporterId: string;
+  reportedUserId?: string | null;
+  sessionId?: string | null;
+  reason: ReportReason;
+  description?: string | null;
+  status: ReportStatus;
+  adminNote?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  reporter?: { id: string; name: string; email: string };
+  reportedUser?: { id: string; name: string; email: string } | null;
+}
+
+export interface AuditLog {
+  id: string;
+  actorId: string;
+  action: string;
+  entityType: string;
+  entityId?: string | null;
+  metadata?: Record<string, unknown> | null;
+  createdAt: string;
+  actor?: { id: string; name: string; email: string };
+}
+
+export interface MentorProfile {
+  id: string;
+  name: string;
+  bio?: string | null;
+  headline?: string | null;
+  location?: string | null;
+  avatarUrl?: string | null;
+  ratingAvg: number;
+  ratingCount: number;
+  totalSessionsTaught: number;
+  skills: Skill[];
+  createdAt: string;
+}
+
+export interface MentorReview {
+  id: string;
+  mentorId: string;
+  learnerId: string;
+  rating: number;
+  comment?: string | null;
+  createdAt: string;
+  learner?: { id: string; name: string; avatarUrl?: string | null };
 }
 
 export interface Pagination {

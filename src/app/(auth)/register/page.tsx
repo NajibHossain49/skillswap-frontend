@@ -6,12 +6,11 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, User, Eye, EyeOff, FileText } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 
 const schema = z.object({
@@ -24,7 +23,6 @@ const schema = z.object({
     .regex(/[0-9]/, 'Need number')
     .regex(/[^A-Za-z0-9]/, 'Need special char'),
   bio: z.string().optional(),
-  role: z.enum(['LEARNER', 'MENTOR']),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -38,15 +36,10 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { role: 'LEARNER' },
   });
-
-  const selectedRole = watch('role');
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -69,30 +62,12 @@ export default function RegisterPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Role selector */}
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-ink-300">I want to join as</label>
-          <div className="grid grid-cols-2 gap-3">
-            {(['LEARNER', 'MENTOR'] as const).map((role) => (
-              <button
-                key={role}
-                type="button"
-                onClick={() => setValue('role', role)}
-                className={cn(
-                  'p-3.5 rounded-xl border text-sm font-medium transition-all',
-                  selectedRole === role
-                    ? 'border-accent-500 bg-accent-500/10 text-accent-400'
-                    : 'border-ink-700 text-ink-400 hover:border-ink-600 hover:text-ink-300',
-                )}
-              >
-                <div className="text-2xl mb-1">{role === 'LEARNER' ? '📚' : '🎓'}</div>
-                {role === 'LEARNER' ? 'Learner' : 'Mentor'}
-                <p className="text-xs text-ink-500 font-normal mt-0.5">
-                  {role === 'LEARNER' ? 'Book sessions' : 'Teach & earn'}
-                </p>
-              </button>
-            ))}
-          </div>
+        <div className="flex items-start gap-3 p-3.5 rounded-xl border border-ink-700 bg-ink-800/40">
+          <GraduationCap size={18} className="text-accent-400 mt-0.5 shrink-0" />
+          <p className="text-xs text-ink-400 leading-relaxed">
+            Everyone starts as a learner. Want to teach? You can apply to become a
+            mentor from your profile after signing up.
+          </p>
         </div>
 
         <Input

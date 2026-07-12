@@ -171,11 +171,7 @@ export default function ProfilePage() {
                 id: '1',
                 name: authUser?.name ?? 'Alex Morgan',
                 email: authUser?.email ?? 'alex@skillswap.dev',
-                avatar: authUser?.avatar
-                    ? typeof authUser.avatar === 'string'
-                        ? authUser.avatar
-                        : undefined
-                    : undefined,
+                avatar: authUser?.avatarUrl ?? undefined,
                 bio: 'Full-stack engineer passionate about open source and teaching. I love breaking down complex concepts into simple, actionable steps. Currently exploring AI/ML and WebAssembly.',
                 role: (authUser?.role as 'MENTOR' | 'LEARNER') ?? 'MENTOR',
                 location: 'Dhaka, Bangladesh',

@@ -12,6 +12,7 @@ interface AuthState {
   isAuthenticated: boolean;
   setAuth: (user: User, accessToken: string, refreshToken: string) => void;
   updateUser: (user: Partial<User>) => void;
+  setCreditBalance: (n: number) => void;
   logout: () => void;
 }
 
@@ -32,6 +33,11 @@ export const useAuthStore = create<AuthState>()(
       updateUser: (partial) =>
         set((state) => ({
           user: state.user ? { ...state.user, ...partial } : null,
+        })),
+
+      setCreditBalance: (n) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, creditBalance: n } : null,
         })),
 
       logout: () => {
