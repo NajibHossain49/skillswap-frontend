@@ -50,8 +50,14 @@ export const authApi = {
 
   logoutAll: () => api.post('/auth/logout-all'),
 
+  // The backend rotates the session on password change and returns a fresh
+  // token pair so the user stays signed in (all other sessions are revoked).
   changePassword: (data: { currentPassword: string; newPassword: string }) =>
-    api.post<{ success: boolean; message: string }>('/auth/change-password', data),
+    api.post<{
+      success: boolean;
+      message: string;
+      data?: { accessToken: string; refreshToken: string };
+    }>('/auth/change-password', data),
 
   forgotPassword: (data: { email: string }) =>
     api.post<{ success: boolean; message: string }>('/auth/forgot-password', data),

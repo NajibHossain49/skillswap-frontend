@@ -9,6 +9,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { SecuritySection } from './SecuritySection';
 
 // ─── Skeleton primitives ───────────────────────────────────────────────────────
 
@@ -409,6 +410,11 @@ export default function ProfilePage() {
                             </div>
                         </SectionCard>
                     </div>
+                </div>
+
+                {/* ── Security ── */}
+                <div className="fade-up" style={{ animationDelay: '0.26s' }}>
+                    <SecuritySection />
                 </div>
             </div>
         </div>

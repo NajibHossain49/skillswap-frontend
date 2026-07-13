@@ -106,7 +106,7 @@ export default function RegisterPage() {
           {...register('bio')}
         />
 
-        <Button type="submit"  size="lg" className="w-full mt-2">
+        <Button type="submit" size="lg" className="w-full mt-2" loading={loading}>
           Create account
         </Button>
       </form>

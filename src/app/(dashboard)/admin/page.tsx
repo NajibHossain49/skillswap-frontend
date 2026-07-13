@@ -11,9 +11,7 @@ import { adminApi, usersApi } from '@/lib/api-services';
 import { User, Role } from '@/types';
 import { timeAgo } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useAuthStore } from '@/store/auth';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { RequireRole } from '@/components/guards/RequireRole';
 
 function UsersTable() {
   const qc = useQueryClient();
@@ -168,25 +166,16 @@ function UsersTable() {
   );
 }
 
-export default function AdminPage() {
-  const user = useAuthStore((s) => s.user);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (user && user.role !== 'ADMIN') router.push('/dashboard');
-  }, [user, router]);
-
+function AdminDashboard() {
   const { data: stats } = useQuery({
     queryKey: ['admin-dashboard'],
     queryFn: async () => (await adminApi.getDashboard()).data.data,
   });
 
-  const { data: activity, refetch } = useQuery({
+  const { data: activity } = useQuery({
     queryKey: ['admin-activity'],
     queryFn: async () => (await adminApi.getActivity(30)).data.data,
   });
-
-  if (user?.role !== 'ADMIN') return null;
 
   const roleMap: Record<string, number> = {};
   stats?.users.byRole.forEach((r) => { roleMap[r.role] = r._count.role; });
@@ -226,5 +215,13 @@ export default function AdminPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <RequireRole roles={['ADMIN']}>
+      <AdminDashboard />
+    </RequireRole>
   );
 }

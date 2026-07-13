@@ -9,13 +9,23 @@ export const api = axios.create({
   timeout: 15000,
 });
 
+// ─── In-memory access token ──────────────────────────────────────────────────
+// The access token lives ONLY in this module-level variable (mirrored into
+// Zustand state). It is deliberately never written to localStorage, so an XSS
+// payload cannot read a long-lived credential off disk. It is lost on refresh
+// and re-hydrated from the refresh token on app mount (see providers.tsx).
+let accessTokenMemory: string | null = null;
+
+export const getAccessToken = () => accessTokenMemory;
+
+export const setAccessToken = (token: string | null) => {
+  accessTokenMemory = token;
+};
+
 // Attach access token to every request
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (accessTokenMemory) {
+    config.headers.Authorization = `Bearer ${accessTokenMemory}`;
   }
   return config;
 });
@@ -151,7 +161,9 @@ api.interceptors.response.use(
       try {
         const res = await axios.post(`${BASE_URL}/api/auth/refresh`, { refreshToken });
         const { accessToken, refreshToken: newRefresh } = res.data.data;
-        localStorage.setItem('accessToken', accessToken);
+        setAccessToken(accessToken);
+        // TODO: migrate to httpOnly cookie — the refresh token still lives in
+        // localStorage because the backend returns it in the JSON body.
         localStorage.setItem('refreshToken', newRefresh);
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
         processQueue(null, accessToken);
@@ -176,15 +188,19 @@ api.interceptors.response.use(
 );
 
 export const clearAuth = () => {
-  localStorage.removeItem('accessToken');
+  accessTokenMemory = null;
   localStorage.removeItem('refreshToken');
+  // Clean up any legacy values from the previous localStorage-based scheme.
+  localStorage.removeItem('accessToken');
   localStorage.removeItem('user');
 };
 
-export const setAuth = (accessToken: string, refreshToken: string, user: unknown) => {
-  localStorage.setItem('accessToken', accessToken);
+export const setAuth = (accessToken: string, refreshToken: string, _user?: unknown) => {
+  // Access token stays in memory only — never localStorage.
+  setAccessToken(accessToken);
+  // TODO: migrate to httpOnly cookie — the refresh token still lives in
+  // localStorage because the backend returns it in the JSON body.
   localStorage.setItem('refreshToken', refreshToken);
-  localStorage.setItem('user', JSON.stringify(user));
 };
 
 export default api;
