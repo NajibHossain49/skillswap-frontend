@@ -1,23 +1,29 @@
-
-import { Navbar } from '@/app/(commonlayout)/Navbar';
-import { FAQSection, FeaturedSkillsSection, FeaturesSection, HeroSection, HowItWorksSection, NewsletterSection, StatsSection, TestimonialsSection } from '../(commonlayout)/components/Homesections';
-
+import {
+  CTASection,
+  FAQSection,
+  FeaturedSkillsSection,
+  FeaturesSection,
+  HeroSection,
+  HowItWorksSection,
+  LogoCloudSection,
+  PricingSection,
+  StatsSection,
+  TestimonialsSection,
+} from './components/Homesections';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-ink-900">
-
-
+    <main className="min-h-screen bg-paper-100 dark:bg-ink-900">
       <HeroSection />
+      <LogoCloudSection />
+      <FeaturesSection />
       <HowItWorksSection />
       <FeaturedSkillsSection />
-      <FeaturesSection />
       <StatsSection />
       <TestimonialsSection />
+      <PricingSection />
       <FAQSection />
-      <NewsletterSection />
-
-
-    </div>
+      <CTASection />
+    </main>
   );
 }

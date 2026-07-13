@@ -15,21 +15,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-ink-300">
+          <label htmlFor={inputId} className="text-sm font-medium text-ink-800 dark:text-ink-300">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {icon && (
-            <span className="absolute left-3 text-ink-400 pointer-events-none">{icon}</span>
+            <span className="absolute left-3 text-paper-500 pointer-events-none dark:text-ink-400">{icon}</span>
           )}
           <input
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full bg-ink-800 border border-ink-600 rounded-xl px-4 py-2.5 text-sm text-ink-100',
-              'placeholder:text-ink-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/30',
-              'transition-all duration-200',
+              'w-full rounded-xl border px-4 py-2.5 text-sm transition-all duration-200',
+              'border-paper-300 bg-white text-ink-900 placeholder:text-paper-500',
+              'dark:border-ink-600 dark:bg-ink-800 dark:text-ink-100 dark:placeholder:text-ink-500',
+              'focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/25',
               icon && 'pl-10',
               suffix && 'pr-10',
               error && 'border-rose-500/60 focus:border-rose-500 focus:ring-rose-500/20',
@@ -38,11 +39,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {suffix && (
-            <span className="absolute right-3 text-ink-400">{suffix}</span>
+            <span className="absolute right-3 text-paper-500 dark:text-ink-400">{suffix}</span>
           )}
         </div>
-        {error && <p className="text-xs text-rose-400">{error}</p>}
-        {hint && !error && <p className="text-xs text-ink-500">{hint}</p>}
+        {error && <p className="text-xs text-rose-500 dark:text-rose-400">{error}</p>}
+        {hint && !error && <p className="text-xs text-paper-500 dark:text-ink-500">{hint}</p>}
       </div>
     );
   },

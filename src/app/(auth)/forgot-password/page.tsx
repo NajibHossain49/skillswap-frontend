@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { authApi } from '@/lib/api-services';
 
+const primaryBtn =
+  'w-full mt-2 h-11 rounded-xl bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold shadow-glow-sm transition-all hover:shadow-glow hover:brightness-110 active:scale-[0.98]';
+
 const schema = z.object({
   email: z.string().email('Invalid email'),
 });
@@ -43,18 +46,18 @@ export default function ForgotPasswordPage() {
   if (submitted) {
     return (
       <div className="animate-fade-up">
-        <div className="mb-6 w-12 h-12 rounded-2xl bg-sage-500/15 border border-sage-500/25 flex items-center justify-center">
-          <MailCheck size={22} className="text-sage-400" />
+        <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-sage-500/25 bg-sage-500/15">
+          <MailCheck size={22} className="text-sage-500 dark:text-sage-400" />
         </div>
-        <h1 className="font-display font-black text-3xl text-ink-100">Check your inbox</h1>
-        <p className="text-ink-400 mt-3 leading-relaxed">
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Check your inbox</h1>
+        <p className="mt-3 leading-relaxed text-paper-600 dark:text-ink-400">
           If an account exists for that address, we&apos;ve sent a reset link. It may take a
           few minutes to arrive — remember to check your spam folder.
         </p>
 
         <Link
           href="/login"
-          className="mt-8 inline-flex items-center gap-2 text-sm text-accent-400 hover:text-accent-300 font-medium transition-colors"
+          className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-accent-600 transition-colors hover:text-accent-500 dark:text-accent-400 dark:hover:text-accent-300"
         >
           <ArrowLeft size={15} />
           Back to sign in
@@ -65,9 +68,9 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="animate-fade-up">
-      <div className="mb-8">
-        <h1 className="font-display font-black text-3xl text-ink-100">Forgot password?</h1>
-        <p className="text-ink-500 mt-2">
+      <div className="mb-7">
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Forgot password?</h1>
+        <p className="mt-2 text-sm text-paper-600 dark:text-ink-400">
           Enter your email and we&apos;ll send you a link to reset it.
         </p>
       </div>
@@ -82,16 +85,16 @@ export default function ForgotPasswordPage() {
           {...register('email')}
         />
 
-        <Button type="submit" size="lg" className="w-full mt-2" loading={loading}>
+        <Button type="submit" size="lg" className={primaryBtn} loading={loading}>
           Send reset link
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-500">
+      <p className="mt-6 text-center text-sm text-paper-600 dark:text-ink-400">
         Remembered it?{' '}
         <Link
           href="/login"
-          className="text-accent-400 hover:text-accent-300 font-medium transition-colors"
+          className="font-semibold text-accent-600 transition-colors hover:text-accent-500 dark:text-accent-400 dark:hover:text-accent-300"
         >
           Back to sign in
         </Link>

@@ -14,6 +14,9 @@ import { authApi } from '@/lib/api-services';
 import { passwordRequirements, passwordSchema, passwordStrength } from '@/lib/password';
 import { cn } from '@/lib/utils';
 
+const primaryBtn =
+  'w-full mt-2 h-11 rounded-xl bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold shadow-glow-sm transition-all hover:shadow-glow hover:brightness-110 active:scale-[0.98]';
+
 const schema = z
   .object({
     newPassword: passwordSchema,
@@ -59,16 +62,16 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="animate-fade-up">
-        <div className="mb-6 w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/25 flex items-center justify-center">
-          <AlertTriangle size={22} className="text-rose-400" />
+        <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-rose-500/25 bg-rose-500/15">
+          <AlertTriangle size={22} className="text-rose-500 dark:text-rose-400" />
         </div>
-        <h1 className="font-display font-black text-3xl text-ink-100">Invalid reset link</h1>
-        <p className="text-ink-400 mt-3 leading-relaxed">
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Invalid reset link</h1>
+        <p className="mt-3 leading-relaxed text-paper-600 dark:text-ink-400">
           This password reset link is missing its token. Please request a new one.
         </p>
         <Link
           href="/forgot-password"
-          className="mt-8 inline-flex text-sm text-accent-400 hover:text-accent-300 font-medium transition-colors"
+          className="mt-8 inline-flex text-sm font-medium text-accent-600 transition-colors hover:text-accent-500 dark:text-accent-400 dark:hover:text-accent-300"
         >
           Request a new link
         </Link>
@@ -78,9 +81,9 @@ function ResetPasswordForm() {
 
   return (
     <div className="animate-fade-up">
-      <div className="mb-8">
-        <h1 className="font-display font-black text-3xl text-ink-100">Set a new password</h1>
-        <p className="text-ink-500 mt-2">Choose a strong password you don&apos;t use elsewhere.</p>
+      <div className="mb-7">
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Set a new password</h1>
+        <p className="mt-2 text-sm text-paper-600 dark:text-ink-400">Choose a strong password you don&apos;t use elsewhere.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -106,20 +109,20 @@ function ResetPasswordForm() {
                 key={i}
                 className={cn(
                   'h-1.5 flex-1 rounded-full transition-colors duration-300',
-                  i < strength.score ? strength.color : 'bg-ink-700',
+                  i < strength.score ? strength.color : 'bg-paper-200 dark:bg-ink-700',
                 )}
               />
             ))}
           </div>
           {pw && (
-            <p className="text-xs text-ink-500">
-              Strength: <span className="text-ink-300 font-medium">{strength.label}</span>
+            <p className="text-xs text-paper-500 dark:text-ink-500">
+              Strength: <span className="font-medium text-ink-800 dark:text-ink-300">{strength.label}</span>
             </p>
           )}
         </div>
 
         {/* Requirements checklist */}
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 rounded-xl border border-ink-700 bg-ink-800/40 p-3.5">
+        <ul className="grid grid-cols-1 gap-1.5 rounded-xl border border-paper-200 bg-paper-100 p-3.5 dark:border-ink-700 dark:bg-ink-800/40 sm:grid-cols-2">
           {passwordRequirements.map((req) => {
             const ok = req.test(pw);
             return (
@@ -127,16 +130,16 @@ function ResetPasswordForm() {
                 key={req.label}
                 className={cn(
                   'flex items-center gap-2 text-xs transition-colors',
-                  ok ? 'text-sage-400' : 'text-ink-500',
+                  ok ? 'text-sage-600 dark:text-sage-400' : 'text-paper-500 dark:text-ink-500',
                 )}
               >
                 <span
                   className={cn(
                     'flex h-4 w-4 items-center justify-center rounded-full',
-                    ok ? 'bg-sage-500/20' : 'bg-ink-700',
+                    ok ? 'bg-sage-500/20 text-sage-600 dark:text-sage-400' : 'bg-paper-200 dark:bg-ink-700',
                   )}
                 >
-                  {ok ? <Check size={11} /> : <X size={11} className="text-ink-600" />}
+                  {ok ? <Check size={11} /> : <X size={11} className="text-paper-500 dark:text-ink-600" />}
                 </span>
                 {req.label}
               </li>
@@ -153,15 +156,15 @@ function ResetPasswordForm() {
           {...register('confirmPassword')}
         />
 
-        <Button type="submit" size="lg" className="w-full mt-2" loading={loading}>
+        <Button type="submit" size="lg" className={primaryBtn} loading={loading}>
           Reset password
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-500">
+      <p className="mt-6 text-center text-sm text-paper-600 dark:text-ink-400">
         <Link
           href="/login"
-          className="text-accent-400 hover:text-accent-300 font-medium transition-colors"
+          className="font-semibold text-accent-600 transition-colors hover:text-accent-500 dark:text-accent-400 dark:hover:text-accent-300"
         >
           Back to sign in
         </Link>

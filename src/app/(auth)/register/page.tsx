@@ -6,12 +6,15 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, User, Eye, EyeOff, GraduationCap } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, GraduationCap, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+
+const primaryBtn =
+  'w-full mt-2 h-11 rounded-xl bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold shadow-glow-sm transition-all hover:shadow-glow hover:brightness-110 active:scale-[0.98]';
 
 const schema = z.object({
   name: z.string().min(2, 'Name too short'),
@@ -56,15 +59,15 @@ export default function RegisterPage() {
 
   return (
     <div className="animate-fade-up">
-      <div className="mb-8">
-        <h1 className="font-display font-black text-3xl text-ink-100">Create account</h1>
-        <p className="text-ink-500 mt-2">Join thousands of learners and mentors</p>
+      <div className="mb-7">
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Create account</h1>
+        <p className="mt-2 text-sm text-paper-600 dark:text-ink-400">Join thousands of learners and mentors.</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex items-start gap-3 p-3.5 rounded-xl border border-ink-700 bg-ink-800/40">
-          <GraduationCap size={18} className="text-accent-400 mt-0.5 shrink-0" />
-          <p className="text-xs text-ink-400 leading-relaxed">
+        <div className="flex items-start gap-3 rounded-xl border border-accent-500/20 bg-accent-500/5 p-3.5">
+          <GraduationCap size={18} className="mt-0.5 shrink-0 text-accent-500 dark:text-accent-400" />
+          <p className="text-xs leading-relaxed text-paper-600 dark:text-ink-400">
             Everyone starts as a learner. Want to teach? You can apply to become a
             mentor from your profile after signing up.
           </p>
@@ -106,14 +109,15 @@ export default function RegisterPage() {
           {...register('bio')}
         />
 
-        <Button type="submit" size="lg" className="w-full mt-2" loading={loading}>
+        <Button type="submit" size="lg" className={primaryBtn} loading={loading}>
           Create account
+          {!loading && <ArrowRight size={16} />}
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-ink-500">
+      <p className="mt-6 text-center text-sm text-paper-600 dark:text-ink-400">
         Already have an account?{' '}
-        <Link href="/login" className="text-accent-400 hover:text-accent-300 font-medium transition-colors">
+        <Link href="/login" className="font-semibold text-accent-600 transition-colors hover:text-accent-500 dark:text-accent-400 dark:hover:text-accent-300">
           Sign in
         </Link>
       </p>

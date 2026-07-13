@@ -9,6 +9,11 @@ import { Button } from '@/components/ui/Button';
 import { authApi } from '@/lib/api-services';
 import { useAuthStore } from '@/store/auth';
 
+const primaryBtn =
+  'w-full mt-8 h-11 rounded-xl bg-gradient-to-r from-accent-500 to-accent-600 text-white font-semibold shadow-glow-sm transition-all hover:shadow-glow hover:brightness-110 active:scale-[0.98]';
+const outlineBtn =
+  'w-full mt-8 h-11 rounded-xl border border-paper-300 bg-white font-semibold text-ink-900 transition-all hover:border-accent-500/40 hover:text-accent-600 dark:border-ink-700 dark:bg-ink-800/40 dark:text-ink-100 dark:hover:text-accent-400';
+
 type VerifyState = 'verifying' | 'success' | 'expired' | 'invalid';
 
 function VerifyEmailInner() {
@@ -57,11 +62,11 @@ function VerifyEmailInner() {
   if (state === 'verifying') {
     return (
       <div className="animate-fade-up text-center">
-        <div className="mx-auto mb-6 w-12 h-12 rounded-2xl bg-accent-500/15 border border-accent-500/25 flex items-center justify-center">
-          <Loader2 size={22} className="text-accent-400 animate-spin" />
+        <div className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-500/25 bg-accent-500/15">
+          <Loader2 size={22} className="animate-spin text-accent-500 dark:text-accent-400" />
         </div>
-        <h1 className="font-display font-black text-3xl text-ink-100">Verifying your email…</h1>
-        <p className="text-ink-500 mt-2">This will only take a moment.</p>
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Verifying your email…</h1>
+        <p className="mt-2 text-sm text-paper-600 dark:text-ink-500">This will only take a moment.</p>
       </div>
     );
   }
@@ -69,14 +74,14 @@ function VerifyEmailInner() {
   if (state === 'success') {
     return (
       <div className="animate-fade-up">
-        <div className="mb-6 w-12 h-12 rounded-2xl bg-sage-500/15 border border-sage-500/25 flex items-center justify-center">
-          <MailCheck size={22} className="text-sage-400" />
+        <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl border border-sage-500/25 bg-sage-500/15">
+          <MailCheck size={22} className="text-sage-500 dark:text-sage-400" />
         </div>
-        <h1 className="font-display font-black text-3xl text-ink-100">Email verified</h1>
-        <p className="text-ink-400 mt-3 leading-relaxed">
+        <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">Email verified</h1>
+        <p className="mt-3 leading-relaxed text-paper-600 dark:text-ink-400">
           Your email address has been confirmed. You now have full access to SkillSwap.
         </p>
-        <Button asChild size="lg" className="w-full mt-8">
+        <Button asChild size="lg" className={primaryBtn}>
           <Link href="/dashboard">Go to dashboard</Link>
         </Button>
       </div>
@@ -88,22 +93,22 @@ function VerifyEmailInner() {
     <div className="animate-fade-up">
       <div
         className={
-          'mb-6 w-12 h-12 rounded-2xl flex items-center justify-center border ' +
+          'mb-6 flex h-12 w-12 items-center justify-center rounded-2xl border ' +
           (expired
-            ? 'bg-amber-500/15 border-amber-500/25'
+            ? 'bg-amber/15 border-amber/25'
             : 'bg-rose-500/15 border-rose-500/25')
         }
       >
         {expired ? (
-          <Clock size={22} className="text-amber-400" />
+          <Clock size={22} className="text-amber" />
         ) : (
-          <MailX size={22} className="text-rose-400" />
+          <MailX size={22} className="text-rose-500 dark:text-rose-400" />
         )}
       </div>
-      <h1 className="font-display font-black text-3xl text-ink-100">
+      <h1 className="font-display text-2xl font-black text-ink-900 dark:text-ink-100 sm:text-3xl">
         {expired ? 'Link expired' : 'Verification failed'}
       </h1>
-      <p className="text-ink-400 mt-3 leading-relaxed">
+      <p className="mt-3 leading-relaxed text-paper-600 dark:text-ink-400">
         {expired
           ? 'This verification link has expired. Request a fresh one below.'
           : 'This verification link is invalid or has already been used. You can request a new one.'}
@@ -111,7 +116,7 @@ function VerifyEmailInner() {
 
       <Button
         size="lg"
-        className="w-full mt-8"
+        className={outlineBtn}
         variant="outline"
         loading={resending}
         onClick={handleResend}
@@ -119,10 +124,10 @@ function VerifyEmailInner() {
         Resend verification email
       </Button>
 
-      <p className="mt-6 text-center text-sm text-ink-500">
+      <p className="mt-6 text-center text-sm text-paper-600 dark:text-ink-400">
         <Link
           href="/login"
-          className="text-accent-400 hover:text-accent-300 font-medium transition-colors"
+          className="font-semibold text-accent-600 transition-colors hover:text-accent-500 dark:text-accent-400 dark:hover:text-accent-300"
         >
           Back to sign in
         </Link>

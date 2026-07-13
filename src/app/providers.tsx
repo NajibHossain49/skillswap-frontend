@@ -7,12 +7,13 @@ import { Loader2 } from 'lucide-react';
 import { authApi } from '@/lib/api-services';
 import { getAccessToken, setAccessToken, clearAuth } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 function BootstrapLoader() {
   return (
-    <div className="min-h-screen bg-ink-900 flex flex-col items-center justify-center gap-4">
-      <Loader2 className="animate-spin text-accent-400" size={32} />
-      <p className="text-sm text-ink-500">Restoring your session…</p>
+    <div className="min-h-screen bg-paper-100 dark:bg-ink-900 flex flex-col items-center justify-center gap-4">
+      <Loader2 className="animate-spin text-accent-500 dark:text-accent-400" size={32} />
+      <p className="text-sm text-paper-600 dark:text-ink-500">Restoring your session…</p>
     </div>
   );
 }
@@ -100,9 +101,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthBootstrap>{children}</AuthBootstrap>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+      <QueryClientProvider client={queryClient}>
+        <AuthBootstrap>{children}</AuthBootstrap>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

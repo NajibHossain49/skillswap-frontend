@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -20,12 +21,27 @@ const config: Config = {
           100: '#E8E8EE',
           200: '#C8C8D8',
           300: '#9898B0',
-          400: '#6868888',
+          400: '#686888',
           500: '#48485F',
           600: '#303045',
           700: '#1E1E2D',
           800: '#121220',
           900: '#0A0A0F',
+          950: '#050509',
+        },
+        // Light-mode neutral surfaces (paper) — used for the light theme.
+        paper: {
+          DEFAULT: '#FFFFFF',
+          50: '#FFFFFF',
+          100: '#F7F7FB',
+          200: '#EFEFF5',
+          300: '#E4E4EE',
+          400: '#D3D3E0',
+          500: '#A6A6BC',
+          600: '#71718A',
+          700: '#4B4B63',
+          800: '#2C2C3E',
+          900: '#171723',
         },
         accent: {
           DEFAULT: '#6C63FF',
@@ -71,7 +87,13 @@ const config: Config = {
         'slide-in': 'slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float 9s ease-in-out infinite',
         'shimmer': 'shimmer 2s linear infinite',
+        'aurora': 'aurora 18s ease-in-out infinite',
+        'gradient-x': 'gradientX 6s ease infinite',
+        'spin-slow': 'spin 14s linear infinite',
+        'scale-in': 'scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'marquee': 'marquee 30s linear infinite',
       },
       keyframes: {
         fadeUp: {
@@ -86,6 +108,10 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateX(-20px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-8px)' },
@@ -94,13 +120,29 @@ const config: Config = {
           '0%': { backgroundPosition: '-1000px 0' },
           '100%': { backgroundPosition: '1000px 0' },
         },
+        aurora: {
+          '0%, 100%': { transform: 'translate3d(0,0,0) scale(1)', opacity: '0.7' },
+          '33%': { transform: 'translate3d(4%, -6%, 0) scale(1.1)', opacity: '0.9' },
+          '66%': { transform: 'translate3d(-4%, 4%, 0) scale(0.95)', opacity: '0.6' },
+        },
+        gradientX: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       boxShadow: {
         'glow': '0 0 40px rgba(108, 99, 255, 0.25)',
         'glow-sm': '0 0 20px rgba(108, 99, 255, 0.15)',
+        'glow-lg': '0 0 80px rgba(108, 99, 255, 0.35)',
         'glow-sage': '0 0 30px rgba(62, 207, 142, 0.2)',
         'card': '0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3)',
         'card-hover': '0 4px 20px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.3)',
+        'soft': '0 2px 8px rgba(16, 16, 32, 0.06), 0 12px 32px rgba(16, 16, 32, 0.08)',
+        'soft-lg': '0 8px 24px rgba(16, 16, 32, 0.08), 0 24px 64px rgba(16, 16, 32, 0.12)',
       },
       borderRadius: {
         'xl': '1rem',
