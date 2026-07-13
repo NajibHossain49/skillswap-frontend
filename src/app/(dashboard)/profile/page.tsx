@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import {
     MapPin, Mail, Calendar, Star, BookOpen, Users,
     Award, Clock, Edit3, ExternalLink, Github, Twitter,
-    Linkedin, CheckCircle, Zap
+    Linkedin, CheckCircle, Zap, GraduationCap, XCircle, ArrowRight
 } from 'lucide-react';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import { MentorStatus } from '@/types';
 import { SecuritySection } from './SecuritySection';
 
 // ─── Skeleton primitives ───────────────────────────────────────────────────────
@@ -154,6 +156,114 @@ function SectionCard({ title, children }: { title: string; children: React.React
         <div className="bg-ink-900 border border-ink-800/60 rounded-2xl p-6">
             <h3 className="text-sm font-semibold text-ink-400 uppercase tracking-wider mb-4">{title}</h3>
             {children}
+        </div>
+    );
+}
+
+// ─── Mentor status card ─────────────────────────────────────────────────────────
+
+function MentorStatusCard({ status, note }: { status: MentorStatus; note?: string | null }) {
+    if (status === 'APPROVED') {
+        return (
+            <div className="bg-ink-900 border border-sage-500/25 rounded-2xl p-6">
+                <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-sage-500/10 flex items-center justify-center text-sage-400 shrink-0">
+                        <CheckCircle size={22} />
+                    </div>
+                    <div className="flex-1">
+                        <h3 className="font-display font-bold text-ink-100">You&apos;re a mentor</h3>
+                        <p className="text-sm text-ink-500 mt-1 mb-4">
+                            Your application was approved. Create a skill to start teaching and earning credits.
+                        </p>
+                        <Link href="/skills">
+                            <button className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-accent-500 hover:bg-accent-400 rounded-lg transition-all">
+                                Create a skill
+                                <ArrowRight size={14} />
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (status === 'PENDING') {
+        return (
+            <div className="bg-ink-900 border border-amber-500/25 rounded-2xl p-6">
+                <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 shrink-0">
+                        <Clock size={22} />
+                    </div>
+                    <div className="flex-1">
+                        <h3 className="font-display font-bold text-ink-100">Application under review</h3>
+                        <p className="text-sm text-ink-500 mt-1 mb-4">
+                            Thanks for applying! Our team is reviewing your mentor application. We&apos;ll let you know as soon as there&apos;s an update.
+                        </p>
+                        <button
+                            disabled
+                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-ink-500 bg-ink-800 border border-ink-700 rounded-lg cursor-not-allowed"
+                        >
+                            Application pending
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (status === 'REJECTED') {
+        return (
+            <div className="bg-ink-900 border border-rose-500/25 rounded-2xl p-6">
+                <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400 shrink-0">
+                        <XCircle size={22} />
+                    </div>
+                    <div className="flex-1">
+                        <h3 className="font-display font-bold text-ink-100">Application not approved</h3>
+                        <p className="text-sm text-ink-500 mt-1">
+                            Your mentor application wasn&apos;t approved this time. You&apos;re welcome to refine your details and apply again.
+                        </p>
+                        {note && (
+                            <div className="mt-3 rounded-xl border border-ink-700 bg-ink-800/50 p-3.5">
+                                <p className="text-xs font-semibold text-ink-400 uppercase tracking-wider mb-1">
+                                    Reviewer note
+                                </p>
+                                <p className="text-sm text-ink-300 leading-relaxed">{note}</p>
+                            </div>
+                        )}
+                        <Link href="/profile/become-a-mentor">
+                            <button className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-accent-500 hover:bg-accent-400 rounded-lg transition-all">
+                                Apply again
+                                <ArrowRight size={14} />
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // NONE
+    return (
+        <div className="relative overflow-hidden bg-ink-900 border border-accent-500/25 rounded-2xl p-6">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent-500/5 to-transparent pointer-events-none" />
+            <div className="relative flex items-start gap-4">
+                <div className="w-11 h-11 rounded-xl bg-accent-500/10 flex items-center justify-center text-accent-400 shrink-0">
+                    <GraduationCap size={22} />
+                </div>
+                <div className="flex-1">
+                    <h3 className="font-display font-bold text-ink-100">Share what you know</h3>
+                    <p className="text-sm text-ink-500 mt-1 mb-4">
+                        Become a mentor to teach the skills you love, help others grow, and earn credits along the way.
+                    </p>
+                    <Link href="/profile/become-a-mentor">
+                        <button className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-accent-500 hover:bg-accent-400 rounded-lg transition-all hover:scale-105 active:scale-95">
+                            Become a mentor
+                            <ArrowRight size={14} />
+                        </button>
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 }
@@ -336,6 +446,14 @@ export default function ProfilePage() {
 
                     {/* Left / main */}
                     <div className="lg:col-span-2 flex flex-col gap-6">
+
+                        {/* Mentor application status */}
+                        {authUser && authUser.role !== 'ADMIN' && (
+                            <MentorStatusCard
+                                status={authUser.mentorStatus ?? 'NONE'}
+                                note={authUser.mentorRejectionReason}
+                            />
+                        )}
 
                         {/* Skills */}
                         <SectionCard title="Skills">

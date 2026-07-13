@@ -58,6 +58,9 @@ export interface User {
   mentorStatus: MentorStatus;
   headline?: string | null;
   location?: string | null;
+  // Set by an admin when a mentor application is reviewed. Surfaced to the
+  // applicant on the profile page when their application is REJECTED.
+  mentorRejectionReason?: string | null;
 }
 
 export interface AuthTokens {

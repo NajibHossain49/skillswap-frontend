@@ -12,7 +12,7 @@ import { useSkills } from '@/hooks/useSkills';
 import { useAuthStore } from '@/store/auth';
 import { canBookSession } from '@/lib/booking';
 import { Session, SessionStatus } from '@/types';
-import { formatDateTime, formatDuration } from '@/lib/utils';
+import { formatDateTime, formatDuration, canTeach } from '@/lib/utils';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -144,7 +144,7 @@ export default function SessionsPage() {
   const skillId = searchParams.get('skillId') || undefined;
 
   const { data, isLoading } = useSessions({ status: status || undefined, page, limit: 9, skillId });
-  const canCreate = user?.role === 'MENTOR' || user?.role === 'ADMIN';
+  const canCreate = canTeach(user);
 
   return (
     <div className="min-h-screen">

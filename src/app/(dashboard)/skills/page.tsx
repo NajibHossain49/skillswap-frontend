@@ -10,7 +10,7 @@ import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { useSkills, useCategories, useCreateSkill, useDeleteSkill } from '@/hooks/useSkills';
 import { useAuthStore } from '@/store/auth';
 import { Skill } from '@/types';
-import { cn, getCategoryGradient, timeAgo } from '@/lib/utils';
+import { cn, getCategoryGradient, timeAgo, canTeach } from '@/lib/utils';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -111,7 +111,7 @@ export default function SkillsPage() {
   const { data, isLoading } = useSkills({ search, category, page, limit: 12 });
   const { data: categories } = useCategories();
 
-  const canCreate = user?.role === 'MENTOR' || user?.role === 'ADMIN';
+  const canCreate = canTeach(user);
 
   return (
     <div className="min-h-screen">

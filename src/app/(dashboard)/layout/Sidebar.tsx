@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, BookOpen, Calendar, Shield,
-  Settings, LogOut, Zap, ChevronRight, Menu, X, Bell,
+  Settings, LogOut, Zap, ChevronRight, Menu, X, Bell, GraduationCap,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/Button';
 const navItems = [
   { href: '/dashboard',     label: 'Dashboard',     icon: LayoutDashboard, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/skills',        label: 'Skills',        icon: BookOpen,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/mentors',       label: 'Mentors',       icon: GraduationCap,   roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/sessions',      label: 'Sessions',      icon: Calendar,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/notifications', label: 'Notifications', icon: Bell,            roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/admin',         label: 'Admin Panel',   icon: Shield,          roles: ['ADMIN'] },

@@ -11,7 +11,7 @@ import { useSkill, useUpdateSkill, useDeleteSkill } from '@/hooks/useSkills';
 import { useSessions } from '@/hooks/useSessions';
 import { useAuthStore } from '@/store/auth';
 import { canBookSession } from '@/lib/booking';
-import { getCategoryGradient, formatDateTime, formatDuration } from '@/lib/utils';
+import { getCategoryGradient, formatDateTime, formatDuration, canTeach } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -35,7 +35,9 @@ export default function SkillDetailPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const canEdit = user?.role === 'ADMIN' || (user?.role === 'MENTOR' && skill?.createdById === user?.id);
+  const canEdit =
+    user?.role === 'ADMIN' ||
+    (canTeach(user) && skill?.createdById === user?.id);
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),

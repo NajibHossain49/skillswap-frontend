@@ -1,10 +1,24 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
-import { SessionStatus, Role } from '@/types';
+import { SessionStatus, Role, User } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+/**
+ * Whether a user may perform mentor/teaching actions (create skills & sessions,
+ * manage availability). The backend gates these on an APPROVED mentor
+ * application — not merely the MENTOR role — so the UI must match to avoid
+ * confusing 403s. Admins can always manage content.
+ */
+export function canTeach(
+  user: Pick<User, 'role' | 'mentorStatus'> | null | undefined,
+): boolean {
+  if (!user) return false;
+  if (user.role === 'ADMIN') return true;
+  return user.role === 'MENTOR' && user.mentorStatus === 'APPROVED';
 }
 
 export function formatDate(dateStr: string, fmt = 'MMM d, yyyy') {
