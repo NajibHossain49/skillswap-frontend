@@ -126,6 +126,7 @@ export interface Notification {
   title: string;
   message: string;
   isRead: boolean;
+  link?: string | null;
   data?: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;

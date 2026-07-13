@@ -4,27 +4,30 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, BookOpen, Calendar, Shield,
-  Settings, LogOut, Zap, ChevronRight, Menu, X,
+  Settings, LogOut, Zap, ChevronRight, Menu, X, Bell,
 } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { useUnreadCount } from '@/hooks/useNotifications';
 import { Avatar, Badge } from '@/components/ui';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/Button';
 
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
-  { href: '/skills',    label: 'Skills',     icon: BookOpen,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
-  { href: '/sessions',  label: 'Sessions',   icon: Calendar,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
-  { href: '/admin',     label: 'Admin Panel',icon: Shield,          roles: ['ADMIN'] },
-  { href: '/profile',   label: 'Profile',    icon: Settings,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/dashboard',     label: 'Dashboard',     icon: LayoutDashboard, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/skills',        label: 'Skills',        icon: BookOpen,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/sessions',      label: 'Sessions',      icon: Calendar,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/notifications', label: 'Notifications', icon: Bell,            roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/admin',         label: 'Admin Panel',   icon: Shield,          roles: ['ADMIN'] },
+  { href: '/profile',       label: 'Profile',       icon: Settings,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
 ];
 
 function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { data: unreadCount = 0 } = useUnreadCount();
 
   const visibleItems = navItems.filter((item) =>
     user ? item.roles.includes(user.role) : false,
@@ -60,6 +63,11 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
             >
               <item.icon size={18} className={cn(isActive ? 'text-accent-400' : 'text-ink-500 group-hover:text-ink-300')} />
               <span className="flex-1">{item.label}</span>
+              {item.href === '/notifications' && unreadCount > 0 && (
+                <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
               {isActive && <ChevronRight size={14} className="text-accent-500/60" />}
             </Link>
           );
