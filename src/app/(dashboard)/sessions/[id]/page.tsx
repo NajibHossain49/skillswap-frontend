@@ -1,11 +1,13 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen, Coins } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Avatar, Skeleton, Modal } from '@/components/ui';
-import { useSession, useBookSession, useUpdateSessionStatus, useAddFeedback } from '@/hooks/useSessions';
+import { BookSessionButton } from '@/components/credits/BookSessionButton';
+import { CancelSessionDialog } from '@/components/credits/CancelSessionDialog';
+import { useSession, useUpdateSessionStatus, useAddFeedback } from '@/hooks/useSessions';
 import { useAuthStore } from '@/store/auth';
 import { formatDateTime, formatDuration, timeAgo } from '@/lib/utils';
 import Link from 'next/link';
@@ -66,7 +68,6 @@ export default function SessionDetailPage() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const { data: session, isLoading } = useSession(id);
-  const bookSession = useBookSession();
   const updateStatus = useUpdateSessionStatus();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -144,6 +145,17 @@ export default function SessionDetailPage() {
                     <p className="text-ink-200 font-medium">{session.skill.title}</p>
                   </div>
                 </div>
+                {typeof session.skill.creditCost === 'number' && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Coins size={15} className="text-amber-400" />
+                    <div>
+                      <p className="text-xs text-ink-500">Credit cost</p>
+                      <p className="text-ink-200 font-medium">
+                        {session.skill.creditCost} credit{session.skill.creditCost === 1 ? '' : 's'}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
 
@@ -205,24 +217,15 @@ export default function SessionDetailPage() {
             <Card className="p-5">
               <h4 className="text-xs font-semibold text-ink-500 uppercase tracking-wider mb-4">Actions</h4>
               <div className="space-y-2">
-                {canBook && (
-                  <Button
-                    className="w-full"
-            
-                    onClick={() => bookSession.mutate(id)}
-                    loading={bookSession.isPending}
-                  >
-                    Book This Session
-                  </Button>
-                )}
+                {canBook && <BookSessionButton session={session} className="w-full" />}
                 {canComplete && (
                   <Button
                     variant="outline"
                     className="w-full"
-                    // icon={<CheckCircle size={16} />}
                     onClick={() => updateStatus.mutate({ id, status: 'COMPLETED' })}
                     loading={updateStatus.isPending}
                   >
+                    <CheckCircle size={16} />
                     Mark Completed
                   </Button>
                 )}
@@ -230,22 +233,22 @@ export default function SessionDetailPage() {
                   <Button
                     variant="secondary"
                     className="w-full"
-                    // icon={<Star size={16} />}
                     onClick={() => setFeedbackOpen(true)}
                   >
+                    <Star size={16} />
                     Leave Feedback
                   </Button>
                 )}
-                {/* {canCancel && (
+                {canCancel && (
                   <Button
-                    variant="danger"
+                    variant="destructive"
                     className="w-full"
-                    icon={<XCircle size={16} />}
                     onClick={() => setCancelOpen(true)}
                   >
+                    <XCircle size={16} />
                     Cancel Session
                   </Button>
-                )} */}
+                )}
                 {!canBook && !canComplete && !canFeedback && !canCancel && (
                   <p className="text-ink-600 text-sm text-center py-2">No actions available</p>
                 )}
@@ -271,13 +274,16 @@ export default function SessionDetailPage() {
 
       <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} sessionId={id} />
 
-      <Modal open={cancelOpen} onClose={() => setCancelOpen(false)} title="Cancel Session" size="sm">
-        <p className="text-ink-400 mb-6">Are you sure you want to cancel this session? The learner will be notified.</p>
-        <div className="flex gap-3">
-          <Button variant="secondary" onClick={() => setCancelOpen(false)} className="flex-1">Keep it</Button>
-          <Button variant="secondary" onClick={() => { updateStatus.mutate({ id, status: 'CANCELLED' }); setCancelOpen(false); }} loading={updateStatus.isPending} className="flex-1">Cancel Session</Button>
-        </div>
-      </Modal>
+      <CancelSessionDialog
+        open={cancelOpen}
+        onClose={() => setCancelOpen(false)}
+        session={session}
+        loading={updateStatus.isPending}
+        onConfirm={() => {
+          updateStatus.mutate({ id, status: 'CANCELLED' });
+          setCancelOpen(false);
+        }}
+      />
     </div>
   );
 }

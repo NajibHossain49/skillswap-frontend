@@ -3,6 +3,7 @@
 import { useAuthStore } from '@/store/auth';
 import { Avatar } from '@/components/ui';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { CreditBadge } from '@/components/credits/CreditBadge';
 
 interface HeaderProps {
   title: string;
@@ -19,6 +20,7 @@ export function Header({ title, subtitle }: HeaderProps) {
         {subtitle && <p className="text-sm text-ink-500 mt-0.5">{subtitle}</p>}
       </div>
       <div className="flex items-center gap-3">
+        <CreditBadge />
         <NotificationBell />
         {user && (
           <div className="flex items-center gap-2.5 pl-3 border-l border-ink-800">

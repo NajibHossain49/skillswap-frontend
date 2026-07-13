@@ -6,6 +6,7 @@ import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, Badge, SkeletonCard, EmptyState, Modal, Textarea, Select } from '@/components/ui';
+import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { useSkills, useCategories, useCreateSkill, useDeleteSkill } from '@/hooks/useSkills';
 import { useAuthStore } from '@/store/auth';
 import { Skill } from '@/types';
@@ -38,9 +39,12 @@ function SkillCard({ skill, canEdit }: { skill: Skill; canEdit: boolean }) {
           <div className={cn('w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center text-lg shrink-0', gradient)}>
             📚
           </div>
-          <span className="text-xs text-ink-500 bg-ink-700/60 px-2.5 py-1 rounded-full">
-            {skill.category}
-          </span>
+          <div className="flex flex-col items-end gap-1.5">
+            <span className="text-xs text-ink-500 bg-ink-700/60 px-2.5 py-1 rounded-full">
+              {skill.category}
+            </span>
+            <CreditCostBadge cost={skill.creditCost} />
+          </div>
         </div>
 
         <h3 className="font-display font-bold text-ink-100 text-base mb-2 group-hover:text-accent-300 transition-colors line-clamp-2">

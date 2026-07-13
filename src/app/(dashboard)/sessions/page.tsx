@@ -5,9 +5,12 @@ import { Plus, Calendar, Clock, Filter } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, SkeletonCard, EmptyState, Modal, Textarea, Select } from '@/components/ui';
+import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
+import { BookSessionButton } from '@/components/credits/BookSessionButton';
 import { useSessions, useCreateSession } from '@/hooks/useSessions';
 import { useSkills } from '@/hooks/useSkills';
 import { useAuthStore } from '@/store/auth';
+import { canBookSession } from '@/lib/booking';
 import { Session, SessionStatus } from '@/types';
 import { formatDateTime, formatDuration } from '@/lib/utils';
 import Link from 'next/link';
@@ -36,9 +39,12 @@ const STATUSES: { label: string; value: SessionStatus | '' }[] = [
 ];
 
 function SessionCard({ session }: { session: Session }) {
+  const user = useAuthStore((s) => s.user);
+  const bookable = canBookSession(session, user);
+
   return (
-    <Link href={`/sessions/${session.id}`}>
-      <Card hover className="p-5 flex flex-col gap-4">
+    <Card className="p-5 flex flex-col gap-4">
+      <Link href={`/sessions/${session.id}`} className="flex flex-col gap-4 group">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <h3 className="font-display font-bold text-ink-100 text-base truncate group-hover:text-accent-300 transition-colors">
@@ -46,7 +52,10 @@ function SessionCard({ session }: { session: Session }) {
             </h3>
             <p className="text-xs text-ink-500 mt-0.5">{session.skill.title} · {session.skill.category}</p>
           </div>
-          <Badge status={session.status}>{session.status}</Badge>
+          <div className="flex flex-col items-end gap-1.5 shrink-0">
+            <Badge status={session.status}>{session.status}</Badge>
+            <CreditCostBadge cost={session.skill.creditCost} />
+          </div>
         </div>
 
         {session.description && (
@@ -82,8 +91,10 @@ function SessionCard({ session }: { session: Session }) {
             </div>
           )}
         </div>
-      </Card>
-    </Link>
+      </Link>
+
+      {bookable && <BookSessionButton session={session} size="sm" className="w-full" />}
+    </Card>
   );
 }
 

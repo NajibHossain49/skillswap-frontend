@@ -115,7 +115,7 @@ export interface Session {
   updatedAt: string;
   mentor: { id: string; name: string; email: string };
   learner?: { id: string; name: string; email: string } | null;
-  skill: { id: string; title: string; category: string };
+  skill: { id: string; title: string; category: string; creditCost?: number };
   feedback?: Feedback | null;
 }
 

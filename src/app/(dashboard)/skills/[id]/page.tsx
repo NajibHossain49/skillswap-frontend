@@ -1,13 +1,16 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Edit2, Trash2, Users, BookOpen } from 'lucide-react';
+import { ArrowLeft, Calendar, Edit2, Trash2, Users, BookOpen, Coins } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Skeleton, Modal, Textarea, Select, Avatar } from '@/components/ui';
+import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
+import { BookSessionButton } from '@/components/credits/BookSessionButton';
 import { useSkill, useUpdateSkill, useDeleteSkill } from '@/hooks/useSkills';
 import { useSessions } from '@/hooks/useSessions';
 import { useAuthStore } from '@/store/auth';
+import { canBookSession } from '@/lib/booking';
 import { getCategoryGradient, formatDateTime, formatDuration } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -115,18 +118,23 @@ export default function SkillDetailPage() {
               ) : (
                 <div className="space-y-3">
                   {sessionsData?.sessions.map((s) => (
-                    <Link key={s.id} href={`/sessions/${s.id}`}>
-                      <div className="flex items-center gap-4 p-3 rounded-xl hover:bg-ink-700/40 transition-colors cursor-pointer border border-ink-700/40 hover:border-ink-600/60">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-ink-200">{s.title}</p>
-                          <p className="text-xs text-ink-500">{formatDateTime(s.scheduledAt)} · {formatDuration(s.duration)}</p>
-                        </div>
-                        <div className="text-right">
-                          <Badge status={s.status}>{s.status}</Badge>
-                          <p className="text-xs text-ink-600 mt-1">{s.mentor.name}</p>
-                        </div>
-                      </div>
-                    </Link>
+                    <div
+                      key={s.id}
+                      className="flex items-center gap-3 p-3 rounded-xl transition-colors border border-ink-700/40 hover:border-ink-600/60"
+                    >
+                      <Link href={`/sessions/${s.id}`} className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-ink-200 hover:text-accent-300 transition-colors">{s.title}</p>
+                        <p className="text-xs text-ink-500">{formatDateTime(s.scheduledAt)} · {formatDuration(s.duration)}</p>
+                      </Link>
+                      <CreditCostBadge cost={s.skill.creditCost ?? skill.creditCost} />
+                      <Badge status={s.status}>{s.status}</Badge>
+                      {canBookSession(s, user) && (
+                        <BookSessionButton
+                          session={{ ...s, skill: { ...s.skill, creditCost: s.skill.creditCost ?? skill.creditCost } }}
+                          size="sm"
+                        />
+                      )}
+                    </div>
                   ))}
                 </div>
               )}
@@ -156,6 +164,13 @@ export default function SkillDetailPage() {
                     <span className="text-sm">Category</span>
                   </div>
                   <span className="text-ink-300 text-sm">{skill.category}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-ink-400">
+                    <Coins size={14} />
+                    <span className="text-sm">Credit cost</span>
+                  </div>
+                  <CreditCostBadge cost={skill.creditCost} />
                 </div>
               </div>
             </Card>
