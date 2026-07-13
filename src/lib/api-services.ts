@@ -338,12 +338,16 @@ export const availabilityApi = {
   getMine: () =>
     api.get<{ success: boolean; data: Availability[] }>('/availability'),
 
-  create: (data: { dayOfWeek: number; startTime: string; endTime: string }) =>
-    api.post<{ success: boolean; data: Availability }>('/availability', data),
+  create: (data: {
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    timezone?: string;
+  }) => api.post<{ success: boolean; data: Availability }>('/availability', data),
 
   update: (
     id: string,
-    data: { dayOfWeek?: number; startTime?: string; endTime?: string },
+    data: { dayOfWeek?: number; startTime?: string; endTime?: string; timezone?: string },
   ) => api.patch<{ success: boolean; data: Availability }>(`/availability/${id}`, data),
 
   remove: (id: string) =>

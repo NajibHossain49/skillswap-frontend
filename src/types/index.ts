@@ -145,6 +145,9 @@ export interface BookingRequest {
   message?: string | null;
   status: BookingRequestStatus;
   reason?: string | null;
+  // Populated once a mentor accepts the request and the server creates the
+  // corresponding Session, so the UI can deep-link to it.
+  sessionId?: string | null;
   createdAt: string;
   updatedAt: string;
   mentor?: { id: string; name: string; avatarUrl?: string | null };
@@ -158,6 +161,7 @@ export interface Availability {
   dayOfWeek: number;
   startTime: string;
   endTime: string;
+  timezone?: string | null;
   createdAt: string;
   updatedAt: string;
 }

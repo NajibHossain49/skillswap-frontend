@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen, Coins } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen, Coins, Video, CalendarPlus, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Avatar, Skeleton, Modal } from '@/components/ui';
@@ -10,10 +10,122 @@ import { CancelSessionDialog } from '@/components/credits/CancelSessionDialog';
 import { useSession, useUpdateSessionStatus, useAddFeedback } from '@/hooks/useSessions';
 import { useAuthStore } from '@/store/auth';
 import { formatDateTime, formatDuration, timeAgo } from '@/lib/utils';
+import { downloadIcs } from '@/lib/ics';
+import { Session } from '@/types';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui';
+
+function formatCountdown(ms: number): string {
+  const totalMinutes = Math.max(0, Math.floor(ms / 60_000));
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+  const parts: string[] = [];
+  if (days) parts.push(`${days}d`);
+  if (days || hours) parts.push(`${hours}h`);
+  parts.push(`${minutes}m`);
+  return parts.join(' ');
+}
+
+/**
+ * "Join session" CTA. Enabled from 10 minutes before the start until 30 minutes
+ * after the session ends; otherwise disabled with a live countdown.
+ */
+function JoinSessionCard({ session }: { session: Session }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const start = new Date(session.scheduledAt).getTime();
+  const end = start + session.duration * 60_000;
+  const windowStart = start - 10 * 60_000;
+  const windowEnd = end + 30 * 60_000;
+
+  const isOpen = now >= windowStart && now <= windowEnd;
+  const hasEnded = now > windowEnd;
+  const hasLink = !!session.meetingLink;
+
+  return (
+    <Card className="p-5">
+      <h4 className="text-xs font-semibold text-ink-500 uppercase tracking-wider mb-4">
+        Meeting
+      </h4>
+
+      {!hasLink ? (
+        <div className="rounded-xl border border-dashed border-ink-700 p-3.5 text-sm text-ink-500">
+          The meeting link will appear here once it&apos;s ready.
+        </div>
+      ) : isOpen ? (
+        <Button asChild className="w-full">
+          <a href={session.meetingLink!} target="_blank" rel="noreferrer">
+            <Video size={16} />
+            Join session
+          </a>
+        </Button>
+      ) : hasEnded ? (
+        <Button disabled className="w-full">
+          <Video size={16} />
+          Session ended
+        </Button>
+      ) : (
+        <div className="space-y-2">
+          <Button disabled className="w-full cursor-not-allowed">
+            <Video size={16} />
+            Starts in {formatCountdown(windowStart - now)}
+          </Button>
+          <p className="text-xs text-ink-600 text-center">
+            The join button unlocks 10 minutes before the start.
+          </p>
+        </div>
+      )}
+
+      <Button
+        variant="outline"
+        className="w-full mt-2"
+        onClick={() => downloadIcs(session)}
+      >
+        <CalendarPlus size={15} />
+        Add to calendar
+      </Button>
+    </Card>
+  );
+}
+
+/** Once completed, shows who earned/spent the session's credits. */
+function CreditOutcomeCard({ session }: { session: Session }) {
+  const cost = session.skill.creditCost ?? 0;
+  return (
+    <Card className="p-6">
+      <h3 className="font-display font-bold text-ink-200 mb-4">Credits</h3>
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between gap-3 rounded-xl bg-sage-500/10 border border-sage-500/20 p-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <ArrowUpRight size={16} className="text-sage-400 shrink-0" />
+            <span className="text-sm text-ink-300 truncate">{session.mentor.name} earned</span>
+          </div>
+          <span className="text-sm font-bold text-sage-400 tabular-nums">
+            +{cost}
+          </span>
+        </div>
+        {session.learner && (
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-ink-700/30 border border-ink-700/60 p-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <ArrowDownRight size={16} className="text-ink-400 shrink-0" />
+              <span className="text-sm text-ink-300 truncate">{session.learner.name} spent</span>
+            </div>
+            <span className="text-sm font-bold text-ink-300 tabular-nums">
+              −{cost}
+            </span>
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}
 
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   return (
@@ -189,6 +301,9 @@ export default function SessionDetailPage() {
               </div>
             </Card>
 
+            {/* Credit outcome */}
+            {session.status === 'COMPLETED' && <CreditOutcomeCard session={session} />}
+
             {/* Feedback */}
             {session.feedback && (
               <Card className="p-6">
@@ -214,6 +329,10 @@ export default function SessionDetailPage() {
 
           {/* Actions sidebar */}
           <div className="space-y-4">
+            {(session.status === 'SCHEDULED' || session.status === 'COMPLETED') && (
+              <JoinSessionCard session={session} />
+            )}
+
             <Card className="p-5">
               <h4 className="text-xs font-semibold text-ink-500 uppercase tracking-wider mb-4">Actions</h4>
               <div className="space-y-2">

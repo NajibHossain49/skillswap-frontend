@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, BookOpen, Calendar, Shield,
   Settings, LogOut, Zap, ChevronRight, Menu, X, Bell, GraduationCap,
+  Inbox, CalendarClock,
 } from 'lucide-react';
+import { Role } from '@/types';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,11 +17,21 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/Button';
 
 
-const navItems = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  roles: Role[];
+  requireApprovedMentor?: boolean;
+}
+
+const navItems: NavItem[] = [
   { href: '/dashboard',     label: 'Dashboard',     icon: LayoutDashboard, roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/skills',        label: 'Skills',        icon: BookOpen,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/mentors',       label: 'Mentors',       icon: GraduationCap,   roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/sessions',      label: 'Sessions',      icon: Calendar,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/bookings',      label: 'Bookings',      icon: Inbox,           roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
+  { href: '/availability',  label: 'Availability',  icon: CalendarClock,   roles: ['MENTOR'], requireApprovedMentor: true },
   { href: '/notifications', label: 'Notifications', icon: Bell,            roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
   { href: '/admin',         label: 'Admin Panel',   icon: Shield,          roles: ['ADMIN'] },
   { href: '/profile',       label: 'Profile',       icon: Settings,        roles: ['ADMIN', 'MENTOR', 'LEARNER'] },
@@ -30,9 +42,11 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
   const { user, logout } = useAuth();
   const { data: unreadCount = 0 } = useUnreadCount();
 
-  const visibleItems = navItems.filter((item) =>
-    user ? item.roles.includes(user.role) : false,
-  );
+  const visibleItems = navItems.filter((item) => {
+    if (!user || !item.roles.includes(user.role)) return false;
+    if (item.requireApprovedMentor && user.mentorStatus !== 'APPROVED') return false;
+    return true;
+  });
 
   return (
     <div className="flex flex-col h-full">

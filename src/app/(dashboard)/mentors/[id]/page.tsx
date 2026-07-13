@@ -30,7 +30,7 @@ import { Card, Skeleton, EmptyState } from '@/components/ui';
 import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { MentorAvatar } from '@/components/mentors/MentorAvatar';
 import { StarRating } from '@/components/mentors/StarRating';
-import { RequestSessionModal } from '@/components/bookings/RequestSessionModal';
+import { RequestSessionDialog } from '@/components/bookings/RequestSessionDialog';
 import { ReportUserDialog } from '@/components/reports/ReportUserDialog';
 import {
   useMentor,
@@ -556,7 +556,7 @@ export default function MentorProfilePage() {
         )}
       </div>
 
-      <RequestSessionModal
+      <RequestSessionDialog
         open={requestOpen}
         onClose={() => setRequestOpen(false)}
         mentor={mentor}
