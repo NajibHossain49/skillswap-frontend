@@ -8,6 +8,7 @@ import {
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useCreditBalance, useCreditTransactions } from '@/hooks/useCredits';
 import { formatDateTime, cn } from '@/lib/utils';
 import { CreditTransaction, CreditTxnType } from '@/types';
@@ -72,7 +73,7 @@ export default function CreditsPage() {
   const [page, setPage] = useState(1);
 
   const { data: balance = 0 } = useCreditBalance();
-  const { data, isLoading, isFetching } = useCreditTransactions({ page, limit: PAGE_SIZE });
+  const { data, isLoading, isFetching, isError, refetch } = useCreditTransactions({ page, limit: PAGE_SIZE });
   // A wider, unfiltered pull to derive lifetime-ish summary totals.
   const { data: summaryData } = useCreditTransactions({ page: 1, limit: 100 });
 
@@ -158,7 +159,11 @@ export default function CreditsPage() {
             Transaction history
           </h2>
 
-          {isLoading ? (
+          {isError ? (
+            <div className="rounded-2xl border border-ink-800/60 bg-ink-900">
+              <ErrorState onRetry={() => refetch()} />
+            </div>
+          ) : isLoading ? (
             <LedgerSkeleton />
           ) : transactions.length === 0 ? (
             <div className="rounded-2xl border border-ink-800/60 bg-ink-900">

@@ -68,14 +68,31 @@ function AuthBootstrap({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/** Pulls an HTTP status off either our ApiError (`status`) or a raw AxiosError. */
+function getErrorStatus(error: unknown): number | undefined {
+  if (error && typeof error === 'object') {
+    const anyErr = error as { status?: number; response?: { status?: number } };
+    return anyErr.status ?? anyErr.response?.status;
+  }
+  return undefined;
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 30 * 1000,
-            retry: 1,
+            staleTime: 60 * 1000,
+            // Retry once for transient/network/5xx errors, but never for 4xx.
+            // This keeps a failed-to-refresh 401 (or a 403/409) from triggering
+            // a retry storm.
+            retry: (failureCount, error) => {
+              const status = getErrorStatus(error);
+              if (status && status >= 400 && status < 500) return false;
+              return failureCount < 1;
+            },
+            // Off by default; the unread-count query opts back in locally.
             refetchOnWindowFocus: false,
           },
         },

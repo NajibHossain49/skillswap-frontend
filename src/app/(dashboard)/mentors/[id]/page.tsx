@@ -8,7 +8,6 @@ import {
   MapPin,
   CalendarDays,
   GraduationCap,
-  MoreVertical,
   Flag,
   Star,
   Clock,
@@ -27,11 +26,13 @@ import {
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Skeleton, EmptyState } from '@/components/ui';
+import { OverflowMenu } from '@/components/ui/OverflowMenu';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { MentorAvatar } from '@/components/mentors/MentorAvatar';
 import { StarRating } from '@/components/mentors/StarRating';
 import { RequestSessionDialog } from '@/components/bookings/RequestSessionDialog';
-import { ReportUserDialog } from '@/components/reports/ReportUserDialog';
+import { ReportDialog } from '@/components/reports/ReportDialog';
 import {
   useMentor,
   useMentorReviews,
@@ -60,42 +61,6 @@ function formatSlotTime(time: string): string {
   const period = h >= 12 ? 'PM' : 'AM';
   const hour12 = h % 12 === 0 ? 12 : h % 12;
   return `${hour12}:${m ?? '00'} ${period}`;
-}
-
-// ─── Overflow menu ──────────────────────────────────────────────────────────
-
-function OverflowMenu({ onReport }: { onReport: () => void }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="relative">
-      <Button
-        variant="ghost"
-        size="icon"
-        aria-label="More options"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <MoreVertical size={18} />
-      </Button>
-      {open && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-1 z-20 w-48 rounded-xl border border-ink-700 bg-ink-800 p-1 shadow-xl">
-            <button
-              onClick={() => {
-                setOpen(false);
-                onReport();
-              }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-rose-400 hover:bg-rose-500/10 transition-colors"
-            >
-              <Flag size={14} />
-              Report this user
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
 }
 
 // ─── Reviews tab ──────────────────────────────────────────────────────────────
@@ -369,7 +334,7 @@ function ProfileSkeleton() {
 export default function MentorProfilePage() {
   const { id } = useParams<{ id: string }>();
   const user = useAuthStore((s) => s.user);
-  const { data: mentor, isLoading, isError } = useMentor(id);
+  const { data: mentor, isLoading, isError, refetch } = useMentor(id);
 
   const [tab, setTab] = useState<Tab>('skills');
   const [requestOpen, setRequestOpen] = useState(false);
@@ -388,15 +353,10 @@ export default function MentorProfilePage() {
               Back to Mentors
             </Button>
           </Link>
-          <EmptyState
-            icon={<GraduationCap size={28} />}
-            title="Mentor not found"
-            description="This mentor profile doesn't exist or is no longer available."
-            action={
-              <Link href="/mentors">
-                <Button>Browse mentors</Button>
-              </Link>
-            }
+          <ErrorState
+            title="Couldn’t load this mentor"
+            description="This profile may not exist, or something went wrong. Try again or head back to the directory."
+            onRetry={() => refetch()}
           />
         </div>
       </div>
@@ -435,7 +395,18 @@ export default function MentorProfilePage() {
                     <p className="text-ink-400 mt-1">{mentor.headline}</p>
                   )}
                 </div>
-                {!isOwnProfile && <OverflowMenu onReport={() => setReportOpen(true)} />}
+                {!isOwnProfile && (
+                  <OverflowMenu
+                    items={[
+                      {
+                        label: 'Report this user',
+                        icon: <Flag size={14} />,
+                        onClick: () => setReportOpen(true),
+                        destructive: true,
+                      },
+                    ]}
+                  />
+                )}
               </div>
 
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 text-sm text-ink-500">
@@ -561,11 +532,11 @@ export default function MentorProfilePage() {
         onClose={() => setRequestOpen(false)}
         mentor={mentor}
       />
-      <ReportUserDialog
+      <ReportDialog
         open={reportOpen}
         onClose={() => setReportOpen(false)}
         reportedUserId={mentor.id}
-        userName={mentor.name}
+        targetLabel={mentor.name}
       />
     </div>
   );

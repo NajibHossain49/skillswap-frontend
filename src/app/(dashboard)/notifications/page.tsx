@@ -9,6 +9,7 @@ import {
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui';
+import { ErrorState } from '@/components/ui/ErrorState';
 import {
   useNotifications,
   useMarkRead,
@@ -57,7 +58,7 @@ export default function NotificationsPage() {
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isFetching } = useNotifications({
+  const { data, isLoading, isFetching, isError, refetch } = useNotifications({
     page,
     unreadOnly,
     limit: PAGE_SIZE,
@@ -124,7 +125,9 @@ export default function NotificationsPage() {
         </div>
 
         {/* Content */}
-        {isLoading ? (
+        {isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <RowSkeleton key={i} />

@@ -206,7 +206,13 @@ export const adminApi = {
     }>('/admin/activity', { params: { days } }),
 
   getAuditLogs: (
-    query: { page?: number; limit?: number; action?: string; actorId?: string } = {},
+    query: {
+      page?: number;
+      limit?: number;
+      action?: string;
+      actorId?: string;
+      entityType?: string;
+    } = {},
   ) =>
     api.get<{ success: boolean; data: { logs: AuditLog[]; pagination: Pagination } }>(
       '/admin/audit-logs',

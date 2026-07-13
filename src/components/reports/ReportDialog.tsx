@@ -20,20 +20,30 @@ const REASONS: { label: string; value: ReportReason }[] = [
 
 const schema = z.object({
   reason: z.enum(['SPAM', 'HARASSMENT', 'INAPPROPRIATE_CONTENT', 'NO_SHOW', 'FRAUD', 'OTHER']),
-  description: z.string().max(1000).optional(),
+  description: z
+    .string()
+    .trim()
+    .min(10, 'Please add at least 10 characters of detail')
+    .max(1000, 'Keep it under 1000 characters'),
 });
 type FormData = z.infer<typeof schema>;
 
-export function ReportUserDialog({
+/**
+ * Generic report dialog. Provide exactly one target: a `reportedUserId` (mentor
+ * profiles, skill authors) or a `sessionId` (session detail).
+ */
+export function ReportDialog({
   open,
   onClose,
   reportedUserId,
-  userName,
+  sessionId,
+  targetLabel,
 }: {
   open: boolean;
   onClose: () => void;
-  reportedUserId: string;
-  userName?: string;
+  reportedUserId?: string;
+  sessionId?: string;
+  targetLabel?: string;
 }) {
   const report = useCreateReport();
   const {
@@ -43,28 +53,29 @@ export function ReportUserDialog({
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { reason: 'SPAM' },
+    defaultValues: { reason: 'SPAM', description: '' },
   });
 
   const onSubmit = async (data: FormData) => {
     await report.mutateAsync({
       reportedUserId,
+      sessionId,
       reason: data.reason,
-      description: data.description?.trim() || undefined,
+      description: data.description.trim(),
     });
     reset();
     onClose();
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="Report this user" size="sm">
+    <Modal open={open} onClose={onClose} title="Submit a report" size="sm">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex items-start gap-3 rounded-xl border border-rose-500/25 bg-rose-500/10 p-3.5 text-sm text-rose-200">
-          <Flag size={16} className="mt-0.5 shrink-0 text-rose-400" />
+        <div className="flex items-start gap-3 rounded-xl border border-ink-700 bg-ink-800/50 p-3.5 text-sm text-ink-300">
+          <Flag size={16} className="mt-0.5 shrink-0 text-ink-400" />
           <p className="leading-relaxed">
-            Reports are confidential. Our team will review
-            {userName ? <> your report about <strong>{userName}</strong></> : ' this report'} and
-            take appropriate action.
+            Reports are confidential. Tell us what&apos;s wrong
+            {targetLabel ? <> with <strong className="text-ink-200">{targetLabel}</strong></> : ''} and
+            our team will review it.
           </p>
         </div>
 
@@ -76,8 +87,8 @@ export function ReportUserDialog({
         />
 
         <Textarea
-          label="Details (optional)"
-          placeholder="Add any context that will help us investigate..."
+          label="Details"
+          placeholder="Describe what happened so our team can investigate..."
           rows={4}
           error={errors.description?.message}
           {...register('description')}

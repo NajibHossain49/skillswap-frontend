@@ -7,6 +7,7 @@ import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select, SkeletonCard, EmptyState } from '@/components/ui';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { MentorCard } from '@/components/mentors/MentorCard';
 import { useMentors, MentorsQuery } from '@/hooks/useMentors';
 import { useCategories } from '@/hooks/useSkills';
@@ -83,7 +84,7 @@ function MentorsDirectory() {
     sortBy,
   };
 
-  const { data, isLoading, isFetching } = useMentors(query);
+  const { data, isLoading, isFetching, isError, refetch } = useMentors(query);
   const mentors = data?.mentors ?? [];
   const pagination = data?.pagination;
 
@@ -165,7 +166,9 @@ function MentorsDirectory() {
               )}
             </div>
 
-            {isLoading ? (
+            {isError ? (
+              <ErrorState onRetry={() => refetch()} />
+            ) : isLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
                   <SkeletonCard key={i} />

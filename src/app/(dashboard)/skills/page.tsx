@@ -6,6 +6,7 @@ import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, Badge, SkeletonCard, EmptyState, Modal, Textarea, Select } from '@/components/ui';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { useSkills, useCategories, useCreateSkill, useDeleteSkill } from '@/hooks/useSkills';
 import { useAuthStore } from '@/store/auth';
@@ -108,7 +109,7 @@ export default function SkillsPage() {
   const [page, setPage] = useState(1);
   const [createOpen, setCreateOpen] = useState(false);
 
-  const { data, isLoading } = useSkills({ search, category, page, limit: 12 });
+  const { data, isLoading, isError, refetch } = useSkills({ search, category, page, limit: 12 });
   const { data: categories } = useCategories();
 
   const canCreate = canTeach(user);
@@ -152,7 +153,9 @@ export default function SkillsPage() {
         </div>
 
         {/* Grid */}
-        {isLoading ? (
+        {isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
           </div>

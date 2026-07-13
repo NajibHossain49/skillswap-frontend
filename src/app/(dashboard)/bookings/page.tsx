@@ -14,6 +14,7 @@ import {
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Modal, Textarea, SkeletonCard, EmptyState } from '@/components/ui';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { MentorAvatar } from '@/components/mentors/MentorAvatar';
 import {
@@ -230,7 +231,7 @@ export default function BookingsPage() {
   const [page, setPage] = useState(1);
   const [rejectTarget, setRejectTarget] = useState<BookingRequest | null>(null);
 
-  const { data, isLoading } = useBookings({ status, page, limit: 10 });
+  const { data, isLoading, isError, refetch } = useBookings({ status, page, limit: 10 });
   const bookings = data?.bookings ?? [];
   const pagination = data?.pagination;
 
@@ -262,7 +263,9 @@ export default function BookingsPage() {
           ))}
         </div>
 
-        {isLoading ? (
+        {isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[...Array(4)].map((_, i) => (
               <SkeletonCard key={i} />

@@ -133,6 +133,71 @@ export function SkeletonCard() {
   );
 }
 
+/** A stat-card shaped skeleton for dashboard grids. */
+export function SkeletonStatCard() {
+  return (
+    <div className="bg-ink-800/60 border border-ink-700/60 rounded-2xl p-5">
+      <div className="flex items-start justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-8 w-16" />
+        </div>
+        <Skeleton className="w-11 h-11 rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+/** A vertical list of row-shaped skeletons (feeds, ledgers, simple lists). */
+export function SkeletonList({ rows = 5 }: { rows?: number }) {
+  return (
+    <div className="space-y-2.5">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-4 p-4 rounded-xl bg-ink-800/40 border border-ink-800/40"
+        >
+          <Skeleton className="w-9 h-9 rounded-xl shrink-0" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-3.5 w-1/3" />
+            <Skeleton className="h-3 w-1/4" />
+          </div>
+          <Skeleton className="h-4 w-14" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** A table-shaped skeleton that mirrors admin data tables. */
+export function SkeletonTable({ rows = 6, cols = 4 }: { rows?: number; cols?: number }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-ink-700/60">
+      <div
+        className="grid gap-4 px-6 py-4 bg-ink-800/40"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+      >
+        {Array.from({ length: cols }).map((_, i) => (
+          <Skeleton key={i} className="h-3 w-20" />
+        ))}
+      </div>
+      <div className="divide-y divide-ink-700/40">
+        {Array.from({ length: rows }).map((_, r) => (
+          <div
+            key={r}
+            className="grid gap-4 px-6 py-4 items-center"
+            style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+          >
+            {Array.from({ length: cols }).map((_, c) => (
+              <Skeleton key={c} className={cn('h-4', c === 0 ? 'w-32' : 'w-16')} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 interface EmptyStateProps {
@@ -233,51 +298,9 @@ export function Select({ label, error, options, className, id, ...props }: Selec
 }
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
-
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
-}
-
-const modalSizes = {
-  sm: 'max-w-sm',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-};
-
-export function Modal({ open, onClose, title, children, size = 'md' }: ModalProps) {
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        className={cn(
-          'relative w-full bg-ink-800 border border-ink-700 rounded-3xl shadow-2xl z-10 animate-fade-up',
-          modalSizes[size],
-        )}
-      >
-        {title && (
-          <div className="flex items-center justify-between p-6 border-b border-ink-700">
-            <h3 className="font-display font-bold text-lg text-ink-100">{title}</h3>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-lg hover:bg-ink-700 flex items-center justify-center text-ink-400 hover:text-ink-200 transition-colors"
-            >
-              ✕
-            </button>
-          </div>
-        )}
-        <div className="p-6">{children}</div>
-      </div>
-    </div>
-  );
-}
+// Accessible dialog (focus trap, Escape-to-close, ARIA) lives in its own client
+// module so this index can stay importable from server components too.
+export { Modal } from './Modal';
 
 // ─── Stats Card ───────────────────────────────────────────────────────────────
 

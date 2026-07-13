@@ -1,10 +1,13 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen, Coins, Video, CalendarPlus, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Star, User, CheckCircle, XCircle, BookOpen, Coins, Video, CalendarPlus, ArrowUpRight, ArrowDownRight, Flag } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Avatar, Skeleton, Modal } from '@/components/ui';
+import { OverflowMenu } from '@/components/ui/OverflowMenu';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { ReportDialog } from '@/components/reports/ReportDialog';
 import { BookSessionButton } from '@/components/credits/BookSessionButton';
 import { CancelSessionDialog } from '@/components/credits/CancelSessionDialog';
 import { useSession, useUpdateSessionStatus, useAddFeedback } from '@/hooks/useSessions';
@@ -179,17 +182,39 @@ export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
-  const { data: session, isLoading } = useSession(id);
+  const { data: session, isLoading, isError, refetch } = useSession(id);
   const updateStatus = useUpdateSessionStatus();
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   if (isLoading) {
     return (
       <div className="min-h-screen">
         <Header title="Session Detail" />
-        <div className="p-8 space-y-4">
-          {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-32" />)}
+        <div className="p-8 max-w-4xl mx-auto space-y-4">
+          <Skeleton className="h-6 w-32" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-5">
+              <Skeleton className="h-48 rounded-2xl" />
+              <Skeleton className="h-40 rounded-2xl" />
+            </div>
+            <div className="space-y-4">
+              <Skeleton className="h-40 rounded-2xl" />
+              <Skeleton className="h-32 rounded-2xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen">
+        <Header title="Session Detail" />
+        <div className="p-8 max-w-4xl mx-auto">
+          <ErrorState onRetry={() => refetch()} />
         </div>
       </div>
     );
@@ -229,6 +254,16 @@ export default function SessionDetailPage() {
                   </div>
                   <h2 className="font-display font-black text-2xl text-ink-100">{session.title}</h2>
                 </div>
+                <OverflowMenu
+                  items={[
+                    {
+                      label: 'Report session',
+                      icon: <Flag size={14} />,
+                      onClick: () => setReportOpen(true),
+                      destructive: true,
+                    },
+                  ]}
+                />
               </div>
 
               {session.description && (
@@ -402,6 +437,13 @@ export default function SessionDetailPage() {
           updateStatus.mutate({ id, status: 'CANCELLED' });
           setCancelOpen(false);
         }}
+      />
+
+      <ReportDialog
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        sessionId={session.id}
+        targetLabel={session.title}
       />
     </div>
   );

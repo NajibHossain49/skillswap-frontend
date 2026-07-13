@@ -1,10 +1,13 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Edit2, Trash2, Users, BookOpen, Coins } from 'lucide-react';
+import { ArrowLeft, Calendar, Edit2, Trash2, Users, BookOpen, Coins, Flag } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, Skeleton, Modal, Textarea, Select, Avatar } from '@/components/ui';
+import { OverflowMenu } from '@/components/ui/OverflowMenu';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { ReportDialog } from '@/components/reports/ReportDialog';
 import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { BookSessionButton } from '@/components/credits/BookSessionButton';
 import { useSkill, useUpdateSkill, useDeleteSkill } from '@/hooks/useSkills';
@@ -28,12 +31,13 @@ export default function SkillDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
-  const { data: skill, isLoading } = useSkill(id);
+  const { data: skill, isLoading, isError, refetch } = useSkill(id);
   const { data: sessionsData } = useSessions({ skillId: id, limit: 5 });
   const updateSkill = useUpdateSkill();
   const deleteSkill = useDeleteSkill();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const canEdit =
     user?.role === 'ADMIN' ||
@@ -60,10 +64,26 @@ export default function SkillDetailPage() {
     return (
       <div className="min-h-screen">
         <Header title="Skill Detail" />
-        <div className="p-8 space-y-4">
-          <Skeleton className="h-8 w-1/3" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-2/3" />
+        <div className="p-8 max-w-5xl mx-auto space-y-4">
+          <Skeleton className="h-6 w-32" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Skeleton className="h-48 rounded-2xl" />
+              <Skeleton className="h-56 rounded-2xl" />
+            </div>
+            <Skeleton className="h-48 rounded-2xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen">
+        <Header title="Skill Detail" />
+        <div className="p-8 max-w-5xl mx-auto">
+          <ErrorState onRetry={() => refetch()} />
         </div>
       </div>
     );
@@ -94,12 +114,26 @@ export default function SkillDetailPage() {
                   </div>
                   <h2 className="font-display font-black text-2xl text-ink-100">{skill.title}</h2>
                 </div>
-                {canEdit && (
-                  <div className="flex gap-2">
-                    <Button variant="secondary" size="sm"  onClick={() => setEditOpen(true)}>Edit</Button>
-                    <Button variant="secondary" size="sm" onClick={() => setDeleteOpen(true)}>Delete</Button>
-                  </div>
-                )}
+                <div className="flex items-center gap-2">
+                  {canEdit && (
+                    <>
+                      <Button variant="secondary" size="sm" onClick={() => setEditOpen(true)}>Edit</Button>
+                      <Button variant="secondary" size="sm" onClick={() => setDeleteOpen(true)}>Delete</Button>
+                    </>
+                  )}
+                  {user && skill.createdById !== user.id && (
+                    <OverflowMenu
+                      items={[
+                        {
+                          label: 'Report skill',
+                          icon: <Flag size={14} />,
+                          onClick: () => setReportOpen(true),
+                          destructive: true,
+                        },
+                      ]}
+                    />
+                  )}
+                </div>
               </div>
               <p className="text-ink-400 leading-relaxed">{skill.description}</p>
 
@@ -207,6 +241,13 @@ export default function SkillDetailPage() {
           <Button variant="secondary" onClick={onDelete} loading={deleteSkill.isPending} className="flex-1">Delete</Button>
         </div>
       </Modal>
+
+      <ReportDialog
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        reportedUserId={skill.createdById}
+        targetLabel={skill.title}
+      />
     </div>
   );
 }

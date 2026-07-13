@@ -5,6 +5,7 @@ import { Plus, Calendar, Clock, Filter } from 'lucide-react';
 import { Header } from '@/app/(dashboard)/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Card, Badge, SkeletonCard, EmptyState, Modal, Textarea, Select } from '@/components/ui';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { CreditCostBadge } from '@/components/credits/CreditCostBadge';
 import { BookSessionButton } from '@/components/credits/BookSessionButton';
 import { useSessions, useCreateSession } from '@/hooks/useSessions';
@@ -143,7 +144,7 @@ export default function SessionsPage() {
 
   const skillId = searchParams.get('skillId') || undefined;
 
-  const { data, isLoading } = useSessions({ status: status || undefined, page, limit: 9, skillId });
+  const { data, isLoading, isError, refetch } = useSessions({ status: status || undefined, page, limit: 9, skillId });
   const canCreate = canTeach(user);
 
   return (
@@ -171,7 +172,9 @@ export default function SessionsPage() {
           )}
         </div>
 
-        {isLoading ? (
+        {isError ? (
+          <ErrorState onRetry={() => refetch()} />
+        ) : isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
           </div>

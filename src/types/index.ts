@@ -58,6 +58,9 @@ export interface User {
   mentorStatus: MentorStatus;
   headline?: string | null;
   location?: string | null;
+  // Provided with a mentor application; shown to admins in the review queue.
+  experience?: string | null;
+  linkedinUrl?: string | null;
   // Set by an admin when a mentor application is reviewed. Surfaced to the
   // applicant on the profile page when their application is REJECTED.
   mentorRejectionReason?: string | null;
@@ -198,7 +201,11 @@ export interface AuditLog {
   action: string;
   entityType: string;
   entityId?: string | null;
+  ip?: string | null;
   metadata?: Record<string, unknown> | null;
+  // The audit trail may capture a before/after snapshot for mutations.
+  before?: Record<string, unknown> | null;
+  after?: Record<string, unknown> | null;
   createdAt: string;
   actor?: { id: string; name: string; email: string };
 }
@@ -246,6 +253,11 @@ export interface ApiResponse<T = unknown> {
   errors?: Record<string, string[]>;
 }
 
+export interface SignupTrendPoint {
+  date: string;
+  count: number;
+}
+
 export interface DashboardStats {
   users: {
     total: number;
@@ -258,6 +270,12 @@ export interface DashboardStats {
   };
   feedback: { avgRating: number | null; totalReviews: number };
   recent: { users: User[]; sessions: Session[] };
+  // Added by the backend for the admin dashboard. Optional so older responses
+  // (or partial mocks) don't break rendering.
+  reports?: { open: number };
+  mentorApplications?: { pending: number };
+  credits?: { inCirculation: number };
+  signupTrend?: SignupTrendPoint[];
 }
 
 export interface MentorStats {
