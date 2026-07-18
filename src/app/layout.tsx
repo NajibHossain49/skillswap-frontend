@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Navbar } from "@/app/(commonlayout)/Navbar";
-import { Footer } from "@/app/(commonlayout)/Footer";
 import { ChatBot } from "@/components/chatbot/ChatBot";
 
 
@@ -28,9 +26,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="font-body antialiased">
         <Providers>
-          <Navbar />
           {children}
-          <Footer></Footer>
           <ChatBot />
           <Toaster
             position="bottom-right"

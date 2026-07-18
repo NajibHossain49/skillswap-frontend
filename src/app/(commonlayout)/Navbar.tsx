@@ -9,12 +9,6 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
-// Navbar hidden on these exact paths
-const HIDDEN_PATHS = ['/login', '/register'];
-
-// Navbar hidden on routes that start with these prefixes
-const HIDDEN_PREFIXES = ['/dashboard', '/admin', '/mentor', '/learner'];
-
 function getInitials(name: string) {
     return name
         .split(' ')
@@ -86,29 +80,12 @@ export function Navbar() {
         return () => document.removeEventListener('mousedown', handler);
     }, []);
 
-    const shouldHide =
-        HIDDEN_PATHS.includes(pathname) ||
-        HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-
-    if (shouldHide) return null;
-
     const visibleNavItems = navItems.filter(
         (item) => !item.authOnly || (item.authOnly && isAuthenticated && user),
     );
 
     const isActive = (href: string) =>
         href === '/' ? pathname === '/' : pathname.startsWith(href);
-
-    if (
-        pathname === '/login' ||
-        pathname === '/register' ||
-        pathname === '/skills' ||
-        pathname === '/sessions' ||
-        pathname === '/admin' ||
-        pathname.startsWith('/dashboard')
-    ) {
-        return null;
-    }
 
     return (
         <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
