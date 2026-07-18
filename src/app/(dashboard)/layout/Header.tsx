@@ -14,7 +14,7 @@ export function Header({ title, subtitle }: HeaderProps) {
   const user = useAuthStore((s) => s.user);
 
   return (
-    <header className="flex items-center justify-between px-8 py-5 border-b border-ink-800/60 bg-ink-900/40 backdrop-blur-sm sticky top-0 z-10">
+    <header className="flex items-center justify-between px-8 py-5 border-b border-ink-800/60 bg-ink-900/95 supports-[backdrop-filter]:bg-ink-900/80 backdrop-blur-md sticky top-0 z-10">
       <div>
         <h1 className="font-display font-black text-2xl text-ink-100 tracking-tight">{title}</h1>
         {subtitle && <p className="text-sm text-ink-500 mt-0.5">{subtitle}</p>}
